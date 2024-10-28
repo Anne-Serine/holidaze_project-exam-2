@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: "Poppins", Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 1rem;
+  }
+  h1 {
+    font-family: "Cormorant Garamond", Georgia, 'Times New Roman', Times, serif;
+    font-size: 2.5rem;
+    text-transform: uppercase;
+  }
+  h2 {
+    font-family: "Cormorant Garamond", Georgia, 'Times New Roman', Times, serif;
+    font-size: 2rem;
+    text-transform: uppercase;
+  }
+  h3 {
+    font-family: "Poppins", Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 1.25rem;
+    text-transform: uppercase;
+  }
+  h4 {
+    font-family: "Cormorant Garamond", Georgia, 'Times New Roman', Times, serif;
+    font-size: 1.25rem;
+    font-style: italic;
+  }
+}
+
