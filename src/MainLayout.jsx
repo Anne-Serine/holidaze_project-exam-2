@@ -1,3 +1,4 @@
+import Header from "./components/layout/Header";
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
@@ -6,11 +7,12 @@ import SingleVenue from "./pages/SingleVenue";
 import Profile from "./pages/Profile";
 import VenueManagement from "./pages/VenueManagement";
 import PageNotFound from "./pages/404";
+import Footer from "./components/layout/Footer";
 
 function MainLayout() {
   return (
     <>
-
+      <Header />
       <main>
         <Routes>
           <Route index element={<Home />} />
@@ -22,7 +24,7 @@ function MainLayout() {
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </main>
-
+      <Footer />
     </>
   )
 }
