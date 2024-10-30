@@ -8,12 +8,12 @@
     font-size: 1rem;
   }
   h1 {
-    font-family: "Cormorant Garamond", Georgia, 'Times New Roman', Times, serif;
+    font-family: "Cormorant Garamond", Georgia, "Times New Roman", Times, serif;
     font-size: 2.5rem;
     text-transform: uppercase;
   }
   h2 {
-    font-family: "Cormorant Garamond", Georgia, 'Times New Roman', Times, serif;
+    font-family: "Cormorant Garamond", Georgia, "Times New Roman", Times, serif;
     font-size: 2rem;
     text-transform: uppercase;
   }
@@ -23,9 +23,25 @@
     text-transform: uppercase;
   }
   h4 {
-    font-family: "Cormorant Garamond", Georgia, 'Times New Roman', Times, serif;
+    font-family: "Cormorant Garamond", Georgia, "Times New Roman", Times, serif;
     font-size: 1.25rem;
     font-style: italic;
   }
 }
 
+.container {
+  @apply p-2 max-w-[1200px];
+}
+
+.app {
+  @apply min-h-lvh flex flex-col;
+  
+}
+
+.footer {
+  @apply mt-auto p-4;
+}
+
+.asymatrical-left {
+  clip-path: polygon(0 0, 100% 0, 30% 100%, 0 100%);
+}
