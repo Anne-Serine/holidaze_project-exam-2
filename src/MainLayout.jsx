@@ -1,5 +1,5 @@
 import Header from "./components/layout/Header";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
@@ -10,9 +10,12 @@ import PageNotFound from "./pages/404";
 import Footer from "./components/layout/Footer";
 
 function MainLayout() {
+  let location = useLocation();
+  const hideHeaderFooter = ["/login", "/register"].includes(location.pathname);
+
   return (
     <>
-      <Header />
+    {!hideHeaderFooter && <Header />}
       <main>
         <Routes>
           <Route index element={<Home />} />
@@ -24,9 +27,9 @@ function MainLayout() {
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </main>
-      <Footer />
+      {!hideHeaderFooter && <Footer />}
     </>
-  )
+  );
 }
 
 export default MainLayout;
