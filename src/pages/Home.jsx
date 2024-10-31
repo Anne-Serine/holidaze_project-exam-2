@@ -6,10 +6,18 @@ function Home() {
       <div className="bg-daze-bg py-2">
         <div className="container flex items-center">
           <div className="md:w-[9vw] md:h-[60vh]">
-            <img src="/assets/holidaze_hero-text.svg" className="h-full" alt="Holidaze decoration text" />
+            <img
+              src="/assets/holidaze_hero-text.svg"
+              className="h-full"
+              alt="Holidaze decoration text"
+            />
           </div>
           <div className="md:w-[100vw] md:h-[60vh]">
-            <img src="/assets/hero-img.jpg" className="h-full w-full object-cover" alt="hero image" />
+            <img
+              src="/assets/hero-img.jpg"
+              className="h-full w-full object-cover"
+              alt="hero image"
+            />
           </div>
         </div>
       </div>
@@ -54,7 +62,11 @@ function Home() {
           <div className="absolute left-0 top-0 h-[50vh] p-7 px-2">
             <div className="asymatrical-left bg-daze-accent text-daze-white p-8 pe-16 h-full">
               <h2 className="text-2xl md:text-3xl mb-5">Most visited venues</h2>
-              <p >Check out the most popular venues that everyone is visiting right now!</p>-{/* Button component */}
+              <p>
+                Check out the most popular venues that everyone is visiting
+                right now!
+              </p>
+              -{/* Button component */}
             </div>
           </div>
         </section>

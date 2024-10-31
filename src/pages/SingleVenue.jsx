@@ -1,4 +1,11 @@
-import { ParkingCircle, PawPrint, Pen, Trash, Utensils, Wifi } from "lucide-react";
+import {
+  ParkingCircle,
+  PawPrint,
+  Pen,
+  Trash,
+  Utensils,
+  Wifi,
+} from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 function SingleVenue() {
@@ -23,44 +30,52 @@ function SingleVenue() {
       <div className="bg-daze-white flex justify-center gap-5 py-2">
         <ul className="container flex justify-center gap-10 font-medium text-sm ">
           <li>
-            <NavLink to="#" className={({ isActive }) =>
-            isActive
-              ? "border-b border-daze-accent"
-              : "hover:border-b hover:border-daze-accent"
-            }
+            <NavLink
+              to="#"
+              className={({ isActive }) =>
+                isActive
+                  ? "border-b border-daze-accent"
+                  : "hover:border-b hover:border-daze-accent"
+              }
             >
               OVERVIEW
-            </NavLink> 
+            </NavLink>
           </li>
           <li>
-            <NavLink to="#" className={({ isActive }) =>
-            isActive
-              ? "border-b border-daze-accent"
-              : "hover:border-b hover:border-daze-accent"
-            }
+            <NavLink
+              to="#"
+              className={({ isActive }) =>
+                isActive
+                  ? "border-b border-daze-accent"
+                  : "hover:border-b hover:border-daze-accent"
+              }
             >
               DESCRIPTION
-            </NavLink> 
+            </NavLink>
           </li>
           <li>
-            <NavLink to="#" className={({ isActive }) =>
-            isActive
-              ? "border-b border-daze-accent"
-              : "hover:border-b hover:border-daze-accent"
-            }
+            <NavLink
+              to="#"
+              className={({ isActive }) =>
+                isActive
+                  ? "border-b border-daze-accent"
+                  : "hover:border-b hover:border-daze-accent"
+              }
             >
               FACILITIES
-            </NavLink> 
+            </NavLink>
           </li>
           <li>
-            <NavLink to="#" className={({ isActive }) =>
-            isActive
-              ? "border-b border-daze-accent"
-              : "hover:border-b hover:border-daze-accent"
-            }
+            <NavLink
+              to="#"
+              className={({ isActive }) =>
+                isActive
+                  ? "border-b border-daze-accent"
+                  : "hover:border-b hover:border-daze-accent"
+              }
             >
               POLICIES
-            </NavLink> 
+            </NavLink>
           </li>
         </ul>
       </div>
@@ -73,22 +88,14 @@ function SingleVenue() {
             <p>Profile name of the creator</p>
           </div>
           <div className="flex justify-between">
-            <div>
-              Created: Date
-            </div>
-            <div>
-              Updated: Date
-            </div>
+            <div>Created: Date</div>
+            <div>Updated: Date</div>
           </div>
-          <div>
-            Description
-          </div>
-          <div>
-            Price NOK / Night
-          </div>
+          <div>Description</div>
+          <div>Price NOK / Night</div>
         </div>
         <div className="bg-daze-white h-full w-full col-span-2 p-4">
-          Calendar <br/>
+          Calendar <br />
           BUTTON
         </div>
       </section>
@@ -112,9 +119,7 @@ function SingleVenue() {
           </button>
         </div>
       </div>
-      <div className="text-center p-5">
-        LOCATION
-      </div>
+      <div className="text-center p-5">LOCATION</div>
     </div>
   );
 }

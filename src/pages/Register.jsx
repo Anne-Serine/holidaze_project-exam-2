@@ -70,7 +70,7 @@ function Register() {
             </div>
 
             {/* Consider to keep this option or not */}
-            
+
             <div className="">
               <div className="flex gap-2">
                 <input type="radio" name="userRadio" id="userRadio" />

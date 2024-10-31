@@ -33,6 +33,10 @@
   @apply p-2 max-w-[1200px];
 }
 
+.container-hug {
+  @apply max-w-[1200px] mx-auto;
+}
+
 .app {
   @apply min-h-lvh flex flex-col;
   
