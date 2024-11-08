@@ -1,4 +1,4 @@
-import { Settings } from "lucide-react";
+import { Pen, Settings } from "lucide-react";
 
 function Profile() {
   return (
@@ -52,6 +52,46 @@ function Profile() {
           <p>List of bookings</p>
           <p>List of bookings</p>
           <p>List of bookings</p>
+        </div>
+
+        {/* Admin profile  */}
+
+
+      </div>
+      <div className="my-5">
+        <h2 className="container">My venues</h2>
+        <div className="bg-daze-primary-op10">
+          <div className="container flex justify-center gap-10">
+            <button className="flex gap-2 items-center">
+              <Pen />
+              <p>Edit venue</p>
+            </button>
+          </div>
+        </div>
+        <div className="container">
+          {/* Venue cards components */}
+          --- venue cards ---
+        </div>
+        <div className="bg-daze-primary-op10">
+          <div className="container grid grid-flow-col grid-cols-4">
+            <div className="col-span-2">
+              {/* Calendar component */}
+                --- calendar component ---
+              <p>---</p>
+              <p>---</p>
+              <p>---</p>
+              <p>---</p>
+              <p>---</p>
+              <p>---</p>
+            </div>
+            <div className="col-span-2">
+              <h2>Reservations on my venues</h2>
+              {/* Reservations cards */}
+              Reservations cards
+            </div>
+            
+          </div>
+
         </div>
       </div>
     </div>
