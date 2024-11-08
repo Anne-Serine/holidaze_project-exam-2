@@ -7,7 +7,7 @@ function Profile() {
         <div className="container relative flex flex-col sm:flex-row items-center md:items-start md:h-full">
           <div className="relative sm:absolute sm:top-10 size-[8rem] sm:size-[12rem] outline outline-daze-white outline-1 -outline-offset-[10px]">
             <img
-              src="/public/assets/hero-img.jpg"
+              src="/assets/hero-img.jpg"
               className=" h-full w-full object-cover "
               alt="profile picture"
             />

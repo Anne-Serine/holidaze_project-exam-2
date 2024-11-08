@@ -47,6 +47,8 @@ function Home() {
       </div>
       <div className="container my-5">
         <h2>Newest venues</h2>- - -{/* List of venues */}
+
+        <p>--- Pagination button ---</p>
       </div>
       <div className="bg-daze-white">
         <section className="container relative flex items-center justify-center h-[50vh]">
@@ -73,6 +75,8 @@ function Home() {
       </div>
       <div className="container my-5">
         <h2>Best offer</h2>- - -{/* Filtered best offer venues */}
+
+        <p>--- Pagination button ---</p>
       </div>
     </>
   );
