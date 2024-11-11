@@ -1,4 +1,5 @@
 import { Pen, Settings } from "lucide-react";
+import BookingCard from "../components/features/BookingCard";
 
 function Profile() {
   return (
@@ -47,11 +48,13 @@ function Profile() {
         <h2>
           My upcoming bookings <span>( 3 )</span>
         </h2>
-        <div>
+        <div className="flex flex-col gap-2">
           {/* Component */}
-          <p>List of bookings</p>
-          <p>List of bookings</p>
-          <p>List of bookings</p>
+          <BookingCard  />
+          <BookingCard  />
+          <BookingCard  />
+          <BookingCard  />
+          
         </div>
 
         {/* Admin profile  */}
