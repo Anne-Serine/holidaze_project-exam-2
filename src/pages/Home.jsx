@@ -1,6 +1,8 @@
 import { ParkingCircle, PawPrint, Utensils, Wifi } from "lucide-react";
 import VenueCard from "../components/features/VenueCard";
 import Button from "../components/common/Buttons";
+import Search from "../components/common/Search";
+
 
 function Home() {
   return (
@@ -25,7 +27,8 @@ function Home() {
       </div>
       <hr className="h-10 bg-daze-white" />
       <div className="container mt-5">
-        <h2 className="">Search venues</h2>- - -{/* search component */}
+        <h2 className="">Search venues</h2>
+        <Search />
       </div>
       <div className="bg-daze-white py-2">
         <div className="container flex justify-center gap-10">
