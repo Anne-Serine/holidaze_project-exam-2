@@ -7,7 +7,7 @@ function BookingCard({ type = "light" }) {
     dark: "bg-daze-gray text-daze-white",
   };
   return (
-    <Link to="" className={`p-2 ${style[type]} flex flex-wrap gap-2 max-w-[30rem]`}>
+    <Link to="" className={`p-2 ${style[type]} flex flex-wrap gap-2`}>
       <div className="size-24">
         <img
           src="/public/assets/hero-img.jpg"
