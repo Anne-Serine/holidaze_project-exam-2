@@ -85,11 +85,11 @@ h2.react-datepicker__current-month {
 }
 
 .react-datepicker__day {
-  @apply md:p-3 md:w-[3rem];
+  @apply p-1 size-[2.25rem] md:p-3 md:size-[3.17rem];
 }
 
 .react-datepicker__day-name {
-  @apply md:p-2 md:w-[3rem];
+  @apply p-1 size-[2.25rem] md:p-2 md:size-[3.17rem];
 }
 
 .react-datepicker__navigation {
@@ -112,3 +112,15 @@ h2.react-datepicker__current-month {
   @apply bg-daze-accent rounded-full;
 }
 
+
+
+
+
+
+
+
+@media (max-width: 768px) {
+  .asymatrical-left {
+    clip-path: none;
+  }
+}
