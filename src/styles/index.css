@@ -1,3 +1,5 @@
+@import "../../node_modules/react-datepicker/dist/react-datepicker.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -40,7 +42,6 @@
 
 .app {
   @apply min-h-lvh flex flex-col;
-  
 }
 
 .footer {
@@ -61,5 +62,53 @@
 
 .cards-grid {
   @apply grid grid-cols-[repeat(auto-fit,minmax(18rem,_1fr))] gap-5 justify-items-center;
+}
+
+
+
+/* React datepicker styling */
+
+.react-datepicker__header {
+  @apply bg-daze-primary;
+}
+
+.react-datepicker__day-names * {
+  @apply text-daze-white;
+}
+
+.react-datepicker {
+  @apply border-daze-primary bg-daze-white;
+}
+
+h2.react-datepicker__current-month {
+  @apply p-4 text-daze-white text-xl;
+}
+
+.react-datepicker__day {
+  @apply md:p-3 md:w-[3rem];
+}
+
+.react-datepicker__day-name {
+  @apply md:p-2 md:w-[3rem];
+}
+
+.react-datepicker__navigation {
+  @apply top-7;
+
+  &.react-datepicker__navigation--previous {
+    @apply left-3;
+  }
+
+  &.react-datepicker__navigation--next {
+    @apply right-3;
+  }
+}
+
+.react-datepicker__navigation-icon::before {
+  @apply border-daze-primary-op10;
+}
+
+.react-datepicker__day--today {
+  @apply bg-daze-accent rounded-full;
 }
 

@@ -7,6 +7,8 @@ import {
   Wifi,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import Calendar from "../components/features/Calendar";
+import Button from "../components/common/Buttons";
 
 function SingleVenue() {
   return (
@@ -79,8 +81,8 @@ function SingleVenue() {
           </li>
         </ul>
       </div>
-      <section className="container grid grid-cols-5">
-        <div className="max-w-[40rem] col-span-3">
+      <section className="container grid cards-grid">
+        <div className="w-full">
           <h1>Venue name</h1>
           <p>rating</p>
           <div>
@@ -94,9 +96,9 @@ function SingleVenue() {
           <div>Description</div>
           <div>Price NOK / Night</div>
         </div>
-        <div className="bg-daze-white h-full w-full col-span-2 p-4">
-          Calendar <br />
-          BUTTON
+        <div className="cards-grid">
+          <Calendar />
+          <Button text="Book" />
         </div>
       </section>
       <div className="bg-daze-gray py-2 text-daze-white">
