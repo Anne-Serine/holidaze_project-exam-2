@@ -10,7 +10,7 @@ function BookingCard({ type = "light" }) {
     <Link to="" className={`p-2 ${style[type]} flex flex-wrap gap-2`}>
       <div className="size-24">
         <img
-          src="/public/assets/hero-img.jpg"
+          src="/assets/hero-img.jpg"
           alt=""
           className="object-cover h-full w-full outline outline-daze-white outline-1 -outline-offset-[5px]"
         />
@@ -21,7 +21,7 @@ function BookingCard({ type = "light" }) {
             <span className="text-2xl font-['Cormorant_Garamond'] uppercase">
               Cabin in the woods
             </span>
-            <span className="flex items-center gap-1 text-sm"><img src="/public/assets/star.svg" alt="" />4.8</span>
+            <span className="flex items-center gap-1 text-sm"><img src="/assets/star.svg" alt="" />4.8</span>
           </div>
           <div className="flex gap-2 text-sm">
             <span>10. november - 15.november</span>

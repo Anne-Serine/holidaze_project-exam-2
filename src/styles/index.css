@@ -65,6 +65,25 @@
 }
 
 
+/* Image carousell */
+
+.img-slider-img {
+  @apply object-cover h-full w-full shrink-0 grow-0 block
+}
+
+.img-slider-btn {
+  @apply absolute block top-0 bottom-0 p-2 md:p-3 cursor-pointer transition ease-in-out duration-500;
+}
+
+.img-slider-btn:hover {
+  @apply bg-daze-gray opacity-80
+}
+
+.img-slider-btn > * {
+  @apply stroke-daze-white size-7 md:size-10
+}
+
+
 
 /* React datepicker styling */
 

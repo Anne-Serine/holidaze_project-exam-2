@@ -10,6 +10,7 @@ import {
 import { NavLink } from "react-router-dom";
 import Calendar from "../components/features/Calendar";
 import Button from "../components/common/Buttons";
+import Carousel from "../components/features/Carousel";
 
 function SingleVenue() {
   return (
@@ -27,8 +28,8 @@ function SingleVenue() {
         </div>
       </div>
       <section className="container">
-        Image carousel
         {/* Image carousel */}
+        <Carousel />
       </section>
       <div className="bg-daze-white flex justify-center gap-5 py-2">
         <ul className="container flex justify-start gap-6 font-medium text-sm ">
@@ -73,11 +74,11 @@ function SingleVenue() {
       <section className="container flex flex-wrap gap-5 justify-between">
         <div className="py-5 max-w-[40rem] min-w-[18rem] flex-1 w-full">
           <h1 className="leading-none mb-2">Venue name</h1>
-          <p className="flex gap-1 items-center"><img src="/public/assets/star.svg" alt="star icon" />4.8</p>
+          <p className="flex gap-1 items-center"><img src="/assets/star.svg" alt="star icon" />4.8</p>
           <div className="my-8 flex gap-3 items-center">
             <div className="size-10 rounded-full overflow-hidden">
               <img
-              src="/public/assets/hero-img.jpg"
+              src="/assets/hero-img.jpg"
               alt="" 
               className="object-cover h-full w-full"
               />
@@ -116,24 +117,24 @@ function SingleVenue() {
           {/* Full width background image */}
           <div className="w-full h-full">
             <img
-              src="/public/assets/hero-img.jpg"
+              src="/assets/hero-img.jpg"
               alt="Location map"
               className="w-full h-full object-cover "
             />
           </div>
           {/* Left side: overlay text content */}
           <div className="md:absolute md:left-0 md:top-0 md:h-[50vh] md:max-w-[30rem] w-full">
-            <div className="container asymatrical-left bg-daze-accent text-daze-gray  h-full">
+            <div className="container asymatrical-left bg-daze-accent text-daze-gray h-full">
               <div className="p-10">
                 <h2 className="text-2xl md:text-3xl mb-5">Location</h2>
-                <dl className="max-w-[80%] mb-10">
-                  <dt className="flex flex-col gap-1">
-                    <dd><MapPin /></dd>
-                    <dd>Skogstua 12</dd>
-                    <dd>3256 Nissedal</dd>
-                    <dd className="mt-2">Norway</dd>
-                  </dt>
-                </dl>
+                <div className="max-w-[80%] mb-10">
+                  <p className="flex flex-col gap-1">
+                    <span><MapPin /></span>
+                    <span>Skogstua 12</span>
+                    <span>3256 Nissedal</span>
+                    <span className="mt-2">Norway</span>
+                  </p>
+                </div>
               </div>
               
             </div>

@@ -27,7 +27,7 @@ function VenueCard() {
           <p className="">*Pris* NOK / Night</p>
           <p className="flex gap-1 text-daze-accent items-center">
             <img
-              src="/public/assets/star.svg"
+              src="/assets/star.svg"
               alt="Star icon"
               className="size-5"
             />
