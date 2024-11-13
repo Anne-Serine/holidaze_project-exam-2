@@ -1,6 +1,7 @@
 import { Pen, Settings } from "lucide-react";
 import BookingCard from "../components/features/BookingCard";
 import VenueCard from "../components/features/VenueCard";
+import Calendar from "../components/features/Calendar";
 
 function Profile() {
   return (
@@ -83,14 +84,8 @@ function Profile() {
         <div className="bg-daze-primary-op10">
           <div className="container grid grid-cols-[repeat(auto-fit,minmax(20rem,_1fr))] gap-5">
             <div className="">
-              {/* Calendar component */}
-              --- calendar component ---
-              <p>---</p>
-              <p>---</p>
-              <p>---</p>
-              <p>---</p>
-              <p>---</p>
-              <p>---</p>
+              {/* Calendar component to show upcoming reservations from other people */}
+             <Calendar />
             </div>
             <div className="">
               <h2>Reservations on my venues</h2>
