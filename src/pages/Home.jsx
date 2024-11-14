@@ -1,4 +1,7 @@
 import { ParkingCircle, PawPrint, Utensils, Wifi } from "lucide-react";
+import VenueCard from "../components/features/VenueCard";
+import Button from "../components/common/Buttons";
+import Search from "../components/common/Search";
 
 function Home() {
   return (
@@ -22,8 +25,9 @@ function Home() {
         </div>
       </div>
       <hr className="h-10 bg-daze-white" />
-      <div className="container mt-5">
-        <h2 className="">Search venues</h2>- - -{/* search component */}
+      <div className="container">
+        <h2 className="">Search venues</h2>
+        <Search />
       </div>
       <div className="bg-daze-white py-2">
         <div className="container flex justify-center gap-10">
@@ -45,11 +49,20 @@ function Home() {
           </button>
         </div>
       </div>
-      <div className="container my-5">
-        <h2>Newest venues</h2>- - -{/* List of venues */}
+      <section className="container">
+        <h2>Newest venues</h2>
+        {/* List of venues */}
+        <div className="cards-grid">
+          <VenueCard />
+          <VenueCard />
+          <VenueCard />
+        </div>
+        <div className="flex justify-center mt-10 mb-5">
+          {/* --- Pagination button --- */}
+          <Button text="More >" />
+        </div>
+      </section>
 
-        <p>--- Pagination button ---</p>
-      </div>
       <div className="bg-daze-white">
         <section className="container relative flex items-center justify-center h-[50vh]">
           {/* Full width background image */}
@@ -64,20 +77,28 @@ function Home() {
           <div className="absolute left-0 top-0 h-[50vh] p-7 px-2">
             <div className="asymatrical-left bg-daze-accent text-daze-white p-8 pe-16 h-full">
               <h2 className="text-2xl md:text-3xl mb-5">Most visited venues</h2>
-              <p>
+              <p className="max-w-[80%] mb-10">
                 Check out the most popular venues that everyone is visiting
                 right now!
               </p>
-              -{/* Button component */}
+              <Button text="View" />
             </div>
           </div>
         </section>
       </div>
-      <div className="container my-5">
-        <h2>Best offer</h2>- - -{/* Filtered best offer venues */}
-
-        <p>--- Pagination button ---</p>
-      </div>
+      <section className="container">
+        <h2>Best offer</h2>
+        {/* Filtered best offer venues */}
+        <div className="cards-grid ">
+          <VenueCard />
+          <VenueCard />
+          <VenueCard />
+        </div>
+        <div className="flex justify-center mt-10 mb-5">
+          {/* --- Pagination button --- */}
+          <Button text="More >" />
+        </div>
+      </section>
     </>
   );
 }

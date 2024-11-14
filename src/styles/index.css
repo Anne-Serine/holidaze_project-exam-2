@@ -1,3 +1,5 @@
+@import "../../node_modules/react-datepicker/dist/react-datepicker.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -16,6 +18,7 @@
     font-family: "Cormorant Garamond", Georgia, "Times New Roman", Times, serif;
     font-size: 2rem;
     text-transform: uppercase;
+    margin: 1rem 0 1rem 0;
   }
   h3 {
     font-family: "Poppins", Verdana, Geneva, Tahoma, sans-serif;
@@ -29,6 +32,15 @@
   }
 }
 
+input,
+textarea {
+  @apply rounded-sm p-1;
+
+  &[type="text"] {
+    @apply w-full;
+  }
+}
+
 .container {
   @apply p-2 max-w-[1200px];
 }
@@ -39,7 +51,6 @@
 
 .app {
   @apply min-h-lvh flex flex-col;
-  
 }
 
 .footer {
@@ -51,5 +62,94 @@
 }
 
 .asymatrical-right {
-  clip-path: polygon(100% 0, 100% 100%, 0 100%, 50% 0);;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%, 50% 0);
+}
+
+.venue-card::before {
+  @apply content-[''] absolute top-0 right-0 bottom-0 left-0 outline outline-daze-white outline-1 -outline-offset-[10px] z-10 pointer-events-none;
+}
+
+.cards-grid {
+  @apply grid grid-cols-[repeat(auto-fit,minmax(18rem,_1fr))] gap-5 justify-items-center;
+}
+
+
+
+/* Image carousell */
+
+.img-slider-img {
+  @apply object-cover h-full w-full shrink-0 grow-0 block
+}
+
+.img-slider-btn {
+  @apply absolute block top-0 bottom-0 p-2 md:p-3 cursor-pointer transition ease-in-out duration-500;
+}
+
+.img-slider-btn:hover {
+  @apply bg-daze-gray opacity-80
+}
+
+.img-slider-btn > * {
+  @apply stroke-daze-white size-7 md:size-10
+}
+
+
+
+/* React datepicker styling */
+
+.react-datepicker__header {
+  @apply bg-daze-primary;
+}
+
+.react-datepicker__day-names * {
+  @apply text-daze-white;
+}
+
+.react-datepicker {
+  @apply border-daze-primary bg-daze-white;
+}
+
+h2.react-datepicker__current-month {
+  @apply p-4 text-daze-white text-xl;
+}
+
+.react-datepicker__day {
+  @apply p-1 size-[2.25rem] md:p-3 md:size-[3.17rem];
+}
+
+.react-datepicker__day-name {
+  @apply p-1 size-[2.25rem] md:p-2 md:size-[3.17rem];
+}
+
+.react-datepicker__navigation {
+  @apply top-7;
+
+  &.react-datepicker__navigation--previous {
+    @apply left-3;
+  }
+
+  &.react-datepicker__navigation--next {
+    @apply right-3;
+  }
+}
+
+.react-datepicker__navigation-icon::before {
+  @apply border-daze-primary-op10;
+}
+
+.react-datepicker__day--today {
+  @apply bg-daze-accent rounded-full;
+}
+
+
+
+
+
+
+
+
+@media (max-width: 768px) {
+  .asymatrical-left {
+    clip-path: none;
+  }
 }

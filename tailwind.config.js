@@ -22,7 +22,7 @@ export default {
         "daze-white": "#FFFFFF",
         "daze-gray": "#353535",
         "daze-red": "#8B0404"
-      }
+      },
     },
   },
   plugins: [],

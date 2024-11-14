@@ -1,4 +1,7 @@
 import { Pen, Settings } from "lucide-react";
+import BookingCard from "../components/features/BookingCard";
+import VenueCard from "../components/features/VenueCard";
+import Calendar from "../components/features/Calendar";
 
 function Profile() {
   return (
@@ -23,8 +26,8 @@ function Profile() {
           </div>
         </div>
       </div>
-      <section className="container-hug grid grid-cols-3">
-        <div className="col-span-2 pt-20 m-2">
+      <section className="container-hug flex flex-wrap">
+        <div className="mt-10 m-2 mb-4 flex-1 min-w-[40%]">
           <h2>Bio</h2>
           <p>
             Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ut, quam?
@@ -36,28 +39,32 @@ function Profile() {
             magnam rerum cum non perspiciatis eaque, nulla unde eveniet!
           </p>
         </div>
-        <div className="bg-daze-primary-op10 col-span-1 flex flex-col p-10 text-center justify-center mx-4">
+        <div className="bg-daze-primary-op10 flex flex-col p-10 text-center justify-center mx-2 md:max-w-[24rem] w-full">
           <h2 className="pb-5">Want to manage venues?</h2>
           <p className="pb-5">Apply for venue manager rights</p>
           <button className="bg-white p-3">APPLY</button>
         </div>
       </section>
       <hr className="h-10 bg-daze-white" />
-      <div className="container my-5">
-        <h2>
-          My upcoming bookings <span>( 3 )</span>
-        </h2>
-        <div>
-          {/* Component */}
-          <p>List of bookings</p>
-          <p>List of bookings</p>
-          <p>List of bookings</p>
+      <div className="container my-5 grid grid-cols-[repeat(auto-fit,minmax(20rem,_1fr))] gap-5 ">
+        <div className="">
+          <h2>
+            My upcoming bookings <span>( 3 )</span>
+          </h2>
+          <div className="flex flex-col gap-2">
+            {/* Component */}
+            <BookingCard />
+            <BookingCard />
+            <BookingCard />
+          </div>
         </div>
+        <div>
 
-        {/* Admin profile  */}
-
-
+        </div>
       </div>
+      
+      {/* Admin profile  */}
+
       <div className="my-5">
         <h2 className="container">My venues</h2>
         <div className="bg-daze-primary-op10">
@@ -68,30 +75,28 @@ function Profile() {
             </button>
           </div>
         </div>
-        <div className="container">
+        <div className="container cards-grid">
           {/* Venue cards components */}
-          --- venue cards ---
+         <VenueCard />
+         <VenueCard />
+         <VenueCard />
         </div>
         <div className="bg-daze-primary-op10">
-          <div className="container grid grid-flow-col grid-cols-4">
-            <div className="col-span-2">
-              {/* Calendar component */}
-                --- calendar component ---
-              <p>---</p>
-              <p>---</p>
-              <p>---</p>
-              <p>---</p>
-              <p>---</p>
-              <p>---</p>
+          <div className="container grid grid-cols-[repeat(auto-fit,minmax(20rem,_1fr))] gap-5">
+            <div className="">
+              {/* Calendar component to show upcoming reservations from other people */}
+             <Calendar />
             </div>
-            <div className="col-span-2">
+            <div className="">
               <h2>Reservations on my venues</h2>
-              {/* Reservations cards */}
-              Reservations cards
+              <div className="flex flex-col gap-2">
+                {/* Reservations cards */}
+                <BookingCard type="dark" />
+                <BookingCard type="dark" />
+                <BookingCard type="dark" />
+              </div>
             </div>
-            
           </div>
-
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import {
+  MapPin,
   ParkingCircle,
   PawPrint,
   Pen,
@@ -7,6 +8,9 @@ import {
   Wifi,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import Calendar from "../components/features/Calendar";
+import Button from "../components/common/Buttons";
+import Carousel from "../components/features/Carousel";
 
 function SingleVenue() {
   return (
@@ -24,23 +28,11 @@ function SingleVenue() {
         </div>
       </div>
       <section className="container">
-        Image carousel
         {/* Image carousel */}
+        <Carousel />
       </section>
       <div className="bg-daze-white flex justify-center gap-5 py-2">
-        <ul className="container flex justify-center gap-10 font-medium text-sm ">
-          <li>
-            <NavLink
-              to="#"
-              className={({ isActive }) =>
-                isActive
-                  ? "border-b border-daze-accent"
-                  : "hover:border-b hover:border-daze-accent"
-              }
-            >
-              OVERVIEW
-            </NavLink>
-          </li>
+        <ul className="container flex justify-start gap-6 font-medium text-sm ">
           <li>
             <NavLink
               to="#"
@@ -79,47 +71,75 @@ function SingleVenue() {
           </li>
         </ul>
       </div>
-      <section className="container grid grid-cols-5">
-        <div className="max-w-[40rem] col-span-3">
-          <h1>Venue name</h1>
-          <p>rating</p>
-          <div>
-            <img src="" alt="" />
+      <section className="container flex flex-wrap gap-5 justify-between">
+        <div className="py-5 max-w-[40rem] min-w-[18rem] flex-1 w-full">
+          <h1 className="leading-none mb-2">Venue name</h1>
+          <p className="flex gap-1 items-center"><img src="/assets/star.svg" alt="star icon" />4.8</p>
+          <div className="my-8 flex gap-3 items-center">
+            <div className="size-10 rounded-full overflow-hidden">
+              <img
+              src="/assets/hero-img.jpg"
+              alt="" 
+              className="object-cover h-full w-full"
+              />
+            </div>
             <p>Profile name of the creator</p>
           </div>
-          <div className="flex justify-between">
-            <div>Created: Date</div>
-            <div>Updated: Date</div>
+          <div className="flex justify-between py-3">
+            <span>Created: Date</span>
+            <span>Updated: Date</span>
           </div>
-          <div>Description</div>
-          <div>Price NOK / Night</div>
+          <p className="">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nemo maiores inventore repellat accusantium. Praesentium exercitationem deserunt, in sit iste incidunt cum minima iure nihil eaque sequi similique dolorum ducimus quod?</p>
+          <div className="mt-5">
+            <span className="font-semibold text-xl">Price NOK</span><span>/ Night</span>
+          </div>
         </div>
-        <div className="bg-daze-white h-full w-full col-span-2 p-4">
-          Calendar <br />
-          BUTTON
+        <div className="py-5 flex flex-col gap-4">
+          <div>
+            <Calendar />
+          </div>
+          <div>
+            <Button text="Book" />
+          </div>
         </div>
       </section>
       <div className="bg-daze-gray py-2 text-daze-white">
-        <div className="container flex justify-center gap-10">
-          <button className="flex flex-col items-center">
-            <Utensils color="#FFFFFF" />
-            Breakfast
-          </button>
-          <button className="flex flex-col items-center">
-            <Wifi color="#FFFFFF" />
-            Wifi
-          </button>
-          <button className="flex flex-col items-center">
-            <ParkingCircle color="#FFFFFF" />
-            Parking
-          </button>
-          <button className="flex flex-col items-center">
-            <PawPrint color="#FFFFFF" />
-            Pets
-          </button>
+        <div className="container">
+          <div className="flex gap-8 items-center justify-center">
+            <span className="flex flex-col items-center"><Utensils color="#FFFFFF" />Breakfast</span>
+            <span className="flex flex-col items-center"><Wifi color="#FFFFFF" />Wifi</span>
+            <span className="flex flex-col items-center"><ParkingCircle color="#FFFFFF" />Parking</span>
+            <span className="flex flex-col items-center"><PawPrint color="#FFFFFF" />Pets</span>
+          </div>
         </div>
       </div>
-      <div className="text-center p-5">LOCATION</div>
+      <section className="md:relative flex flex-wrap items-center justify-center md:h-[50vh]">
+          {/* Full width background image */}
+          <div className="w-full h-full">
+            <img
+              src="/assets/hero-img.jpg"
+              alt="Location map"
+              className="w-full h-full object-cover "
+            />
+          </div>
+          {/* Left side: overlay text content */}
+          <div className="md:absolute md:left-0 md:top-0 md:h-[50vh] md:max-w-[30rem] w-full">
+            <div className="container asymatrical-left bg-daze-accent text-daze-gray h-full">
+              <div className="p-10">
+                <h2 className="text-2xl md:text-3xl mb-5">Location</h2>
+                <div className="max-w-[80%] mb-10">
+                  <p className="flex flex-col gap-1">
+                    <span><MapPin /></span>
+                    <span>Skogstua 12</span>
+                    <span>3256 Nissedal</span>
+                    <span className="mt-2">Norway</span>
+                  </p>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </section>
     </div>
   );
 }
