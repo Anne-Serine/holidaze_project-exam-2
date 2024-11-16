@@ -2,8 +2,18 @@ import { ParkingCircle, PawPrint, Utensils, Wifi } from "lucide-react";
 import VenueCard from "../components/features/VenueCard";
 import Button from "../components/common/Buttons";
 import Search from "../components/common/Search";
+import useVenues from "../hooks/Store";
+import { useEffect } from "react";
 
 function Home() {
+
+  const venues = useVenues((state) => state.allVenues);
+  const getAllVenues = useVenues((state) => state.getAllVenues);
+
+  useEffect(() => {
+    getAllVenues();
+  }, [getAllVenues])
+
   return (
     <>
       <div className="bg-daze-bg py-2">
@@ -53,9 +63,17 @@ function Home() {
         <h2>Newest venues</h2>
         {/* List of venues */}
         <div className="cards-grid">
-          <VenueCard />
-          <VenueCard />
-          <VenueCard />
+          {venues.length > 0 &&
+            venues.map((venue) => (
+              <VenueCard 
+                key={venue.id}
+                image={venue.media}
+                name={venue.name}
+                price={venue.price}
+                rating={venue.rating}
+              />
+            ))}
+         
         </div>
         <div className="flex justify-center mt-10 mb-5">
           {/* --- Pagination button --- */}
@@ -90,8 +108,6 @@ function Home() {
         <h2>Best offer</h2>
         {/* Filtered best offer venues */}
         <div className="cards-grid ">
-          <VenueCard />
-          <VenueCard />
           <VenueCard />
         </div>
         <div className="flex justify-center mt-10 mb-5">
