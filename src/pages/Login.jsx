@@ -1,3 +1,5 @@
+import LoginForm from "../components/forms/LoginForm";
+
 function Login() {
   return (
     <div className="flex">
@@ -14,30 +16,7 @@ function Login() {
           <h2 className="text-2xl mb-5">
             To be able to book your next adventure
           </h2>
-          <form id="loginForm" action="post">
-            <div>
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                name="email"
-                id="email"
-                required
-                pattern="^[\w\-.]+@stud\.noroff\.no$"
-                title="The email must be a valid stud.noroff.no email address"
-              />
-            </div>
-            <div>
-              <label htmlFor="">Password</label>
-              <input
-                type="password"
-                name="password"
-                id="password"
-                required
-                minLength={8}
-                title="The password must be at least 8 characters long"
-              />
-            </div>
-          </form>
+          <LoginForm />
         </div>
       </div>
     </div>
