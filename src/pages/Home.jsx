@@ -67,10 +67,12 @@ function Home() {
             venues.map((venue) => (
               <VenueCard 
                 key={venue.id}
+                id={venue.id}
                 image={venue.media}
                 name={venue.name}
                 price={venue.price}
                 rating={venue.rating}
+                meta={venue.meta}
               />
             ))}
          

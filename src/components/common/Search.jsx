@@ -9,7 +9,7 @@ function Search() {
         id="sarchInput"
         aria-label="Search for venue name"
         aria-controls="searchResults"
-        onChange=""
+        // onChange=""
         className="bg-daze-white p-4 border-daze-primary-op50 border-[5px] border-r-0 w-full focus:outline-none focus:border-r-[5px] focus:border-daze-primary"
         />
         <Button text="Search" />
