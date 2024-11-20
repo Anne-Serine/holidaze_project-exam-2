@@ -7,7 +7,7 @@ import {
   Utensils,
   Wifi,
 } from "lucide-react";
-import { NavLink, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Calendar from "../components/features/Calendar";
 import Button from "../components/common/Buttons";
 import Carousel from "../components/features/Carousel";
@@ -103,7 +103,7 @@ function SingleVenue() {
         </div>
         <div className="py-5 flex flex-col gap-4">
           <div>
-            <Calendar />
+            <Calendar venueData={venueData} />
           </div>
           <div>
             <Button text="Book" />

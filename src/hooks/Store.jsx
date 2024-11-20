@@ -88,6 +88,7 @@ export const useAuthStore = create(
 const useVenues = create((set) => ({
   allVenues: [],
   error: null,
+  
   getAllVenues: async (id = '') => {
     try {
       const response = await fetch(
@@ -112,6 +113,38 @@ const useVenues = create((set) => ({
 }));
 
 export default useVenues;
+
+export const useBookings = create((set) => ({
+  allBookings: [],
+  error: null,
+  getAllBookings: async (id = '') => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}holidaze/bookings${id ? `/${id}?_customer=true&_venue=true` : ''}`,
+        {
+          method: "GET",
+          headers: {
+            'content-Type': 'application/json',
+          },
+        }
+      ).then(
+        (result) => result.json()
+      );
+      if (id) {
+        return response.data
+      } else {
+        set(() => ({
+          allBookings: response.data,
+        }));
+      }  
+    } catch (error) {
+      console.log("Error fetching venues", error);
+      set(() => ({
+        error: error.message,
+      }))
+    }
+  }
+}))
 
 
 // export const useProfilesStore = create((set) => ({
