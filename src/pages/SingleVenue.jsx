@@ -30,19 +30,17 @@ function SingleVenue() {
     }
   }, [getAllVenues, id]);
 
-  console.log(venueData)
-
   return (
     <div>
       <div className="bg-daze-primary-op10">
-        <div className="container flex justify-end gap-10">
-          <button className="flex gap-2 items-center">
+        <div className="container flex justify-end gap-8 text-sm">
+          <button className="flex gap-1 items-center">
             <Pen />
-            <p>Edit venue</p>
+            <p>Edit</p>
           </button>
-          <button className="flex gap-2">
+          <button className="flex gap-1 items-center">
             <Trash color="#8B0404" />
-            <p className="text-daze-red">Delete venue</p>
+            <p className="text-daze-red">Delete</p>
           </button>
         </div>
       </div>
@@ -53,46 +51,31 @@ function SingleVenue() {
       <div className="bg-daze-white flex justify-center gap-5 py-2">
         <ul className="container flex justify-start gap-6 font-medium text-sm ">
           <li>
-            <NavLink
-              to="#"
-              className={({ isActive }) =>
-                isActive
-                  ? "border-b border-daze-accent"
-                  : "hover:border-b hover:border-daze-accent"
-              }
+            <a href="#description"
+              className="hover:border-b hover:border-daze-accent"
             >
               DESCRIPTION
-            </NavLink>
+            </a>
           </li>
           <li>
-            <NavLink
-              to="#"
-              className={({ isActive }) =>
-                isActive
-                  ? "border-b border-daze-accent"
-                  : "hover:border-b hover:border-daze-accent"
-              }
+            <a href="#amenities"
+              className="hover:border-b hover:border-daze-accent"
             >
-              FACILITIES
-            </NavLink>
+              AMENITIES
+            </a>
           </li>
           <li>
-            <NavLink
-              to="#"
-              className={({ isActive }) =>
-                isActive
-                  ? "border-b border-daze-accent"
-                  : "hover:border-b hover:border-daze-accent"
-              }
+            <a href="#location"
+              className="hover:border-b hover:border-daze-accent"
             >
-              POLICIES
-            </NavLink>
+              LOCATION
+            </a>
           </li>
         </ul>
       </div>
       {venueData && 
-      <section className="container flex flex-wrap gap-5 justify-between">
-        <div className="py-5 max-w-[40rem] min-w-[18rem] flex-1 w-full">
+      <section id="description" className="container flex flex-wrap gap-5 justify-center md:justify-between ">
+        <div className="py-5 max-w-[38rem] min-w-[18rem] flex-1 w-full">
           <h1 className="leading-none mb-2">{venueData.name}</h1>
           {venueData.rating ? (
             <p className="flex gap-1 items-center"><img src="/assets/star.svg" alt="star icon" />{venueData.rating}</p>
@@ -102,18 +85,18 @@ function SingleVenue() {
           <div className="my-8 flex gap-3 items-center">
             <div className="size-10 rounded-full overflow-hidden">
               <img
-              src="/assets/hero-img.jpg"
+              src={venueData.owner.avatar.url}
               alt="" 
               className="object-cover h-full w-full"
               />
             </div>
-            <p>Profile name of the creator</p>
+            <p>{venueData.owner.name}</p>
           </div>
           <div className="flex justify-between py-3 text-sm italic">
-            <span>Created: {new Date(venueData.created).toLocaleDateString()}</span>
-            <span>Updated: {new Date(venueData.updated).toLocaleDateString()}</span>
+            <span className="flex flex-col">Created: <span>{new Date(venueData.created).toLocaleDateString()}</span></span>
+            <span className="flex flex-col">Updated: <span>{new Date(venueData.updated).toLocaleDateString()}</span></span>
           </div>
-          <p className="">{venueData.description}</p>
+          <p>{venueData.description}</p>
           <div className="mt-5">
             <span className="font-semibold text-xl">{venueData.price} NOK</span><span>/ Night</span>
           </div>
@@ -128,42 +111,45 @@ function SingleVenue() {
         </div>
       </section>
       }
-      <div className="bg-daze-gray py-2 text-daze-white">
+      <div id="amenities" className="bg-daze-gray py-2 text-daze-white">
         <div className="container">
-        {venueData && 
-          <div className="flex gap-8 items-center justify-center">
-            {venueData.meta.breakfast ? (
-              <span className="flex flex-col items-center"><Utensils color="#FFFFFF" />Breakfast</span>
-            ) : (
-              <span className="flex flex-col items-center text-neutral-500"><Utensils color="#737373" />Breakfast</span>
-            )}
-            {venueData.meta.wifi ? (
-              <span className="flex flex-col items-center"><Wifi color="#FFFFFF" />Wifi</span>
-            ) : (
-              <span className="flex flex-col items-center text-neutral-500"><Wifi color="#737373" />Wifi</span>
-            )}
-            {venueData.meta.parking ? (
-              <span className="flex flex-col items-center"><ParkingCircle color="#FFFFFF" />Parking</span>
-            ) : (
-              <span className="flex flex-col items-center text-neutral-500"><ParkingCircle color="#737373" />Parking</span>
-            )}
-            {venueData.meta.pets ? (
-              <span className="flex flex-col items-center"><PawPrint color="#FFFFFF" />Pets</span>
-            ) : (
-              <span className="flex flex-col items-center text-neutral-500"><PawPrint color="#737373" />Pets</span>
-            )}
+          <div className="flex items-center gap-4">
+            <p className="whitespace-nowrap">Amenities:</p>
+            {venueData && 
+              <div className="flex gap-8 items-center justify-center text-sm flex-1">
+                {venueData.meta.breakfast ? (
+                  <span className="flex flex-col items-center"><Utensils color="#C78D70" />Breakfast</span>
+                ) : (
+                  <span className="flex flex-col items-center text-neutral-500"><Utensils color="#737373" />Breakfast</span>
+                )}
+                {venueData.meta.wifi ? (
+                  <span className="flex flex-col items-center"><Wifi color="#C78D70" />Wifi</span>
+                ) : (
+                  <span className="flex flex-col items-center text-neutral-500"><Wifi color="#737373" />Wifi</span>
+                )}
+                {venueData.meta.parking ? (
+                  <span className="flex flex-col items-center"><ParkingCircle color="#C78D70" />Parking</span>
+                ) : (
+                  <span className="flex flex-col items-center text-neutral-500"><ParkingCircle color="#737373" />Parking</span>
+                )}
+                {venueData.meta.pets ? (
+                  <span className="flex flex-col items-center"><PawPrint color="#C78D70" />Pets</span>
+                ) : (
+                  <span className="flex flex-col items-center text-neutral-500"><PawPrint color="#737373" />Pets</span>
+                )}
+              </div>
+            }
           </div>
-        }
         </div>
       </div>
       {venueData && 
-        <section className="bg-daze-accent ">
+        <section id="location" className="bg-daze-accent ">
           <div className="container-hug md:relative flex flex-wrap items-center justify-center md:h-[50vh]">
             {/* Full width background image */}
             <div className="w-full h-full">
               <img
-                src={venueData.media[0].url}
-                alt="Location"
+                src="/assets/map.jpg"
+                alt="Location map"
                 className="w-full h-full object-cover"
               />
             </div>

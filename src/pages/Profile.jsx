@@ -2,8 +2,13 @@ import { Pen, Settings } from "lucide-react";
 import BookingCard from "../components/features/BookingCard";
 import VenueCard from "../components/features/VenueCard";
 import Calendar from "../components/features/Calendar";
+import { useAuthStore } from "../hooks/Store";
 
 function Profile() {
+
+  const user = useAuthStore((state) => state.user);
+  console.log(user.name)
+
   return (
     <div>
       <div className="relative bg-daze-gray md:h-[200px]">
@@ -16,9 +21,9 @@ function Profile() {
             />
           </div>
           <div className="max-h-[200px] sm:ml-[14rem] sm:pt-28 text-daze-white flex flex-col w-full justify-end text-center sm:text-start max-w-[18rem] sm:max-w-full">
-            <h1 className="text-2xl sm:text-4xl py-3 sm:py-0">Name Nameson</h1>
+            <h1 className="text-2xl sm:text-4xl py-3 sm:py-0">{user.name}</h1>
             <div className="flex justify-between items-center text-sm sm:text-base">
-              <p className="">email@address.no</p>
+              <p>{user.email}</p>
               <button className="flex gap-2 items-center">
                 <Settings size={20} /> Edit profile
               </button>
@@ -28,15 +33,13 @@ function Profile() {
       </div>
       <section className="container-hug flex flex-wrap">
         <div className="mt-10 m-2 mb-4 flex-1 min-w-[40%]">
-          <h2>Bio</h2>
+          <h2 className="text-2xl">About me</h2>
           <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ut, quam?
-            Eaque distinctio quos repudiandae facere recusandae! Asperiores
-            laborum sequi quos nobis voluptatibus quo dolorem repellendus eos
-            odio, amet porro qui! Lorem ipsum dolor, sit amet consectetur
-            adipisicing elit. Perferendis esse exercitationem excepturi cumque
-            natus ducimus modi aspernatur nesciunt blanditiis odit, voluptatem
-            magnam rerum cum non perspiciatis eaque, nulla unde eveniet!
+            {user.bio ? (
+              user.bio
+            ) : (
+              "No bio added yet"
+            )}
           </p>
         </div>
         <div className="bg-daze-primary-op10 flex flex-col p-10 text-center justify-center mx-2 md:max-w-[24rem] w-full">

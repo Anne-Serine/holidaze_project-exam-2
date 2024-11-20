@@ -10,7 +10,6 @@ export const useAuthStore = create(
       registeredUser: "",
 
       registerUser: async (userData) => {
-        console.log(userData)
         try {
           const response = await fetch(
             `${import.meta.env.VITE_BASE_URL}auth/register`,
@@ -26,7 +25,6 @@ export const useAuthStore = create(
           );
 
           if ( response.data) {
-            console.log(response)
             set(() => ({
               registeredUser: "Successfully registered",
             }));
@@ -60,7 +58,7 @@ export const useAuthStore = create(
           );
 
           if ( response.data) {
-            console.log(response)
+            
             const { accessToken, ...user } = response.data;
             set(() => ({
               token: accessToken,
@@ -81,7 +79,7 @@ export const useAuthStore = create(
         set({token: null}),
     }),
     {
-      name: "auth-storage", // Name in localStorage
+      name: "auth-storage", // Name in localStorage,
     }
   )
 );
@@ -93,7 +91,7 @@ const useVenues = create((set) => ({
   getAllVenues: async (id = '') => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BASE_URL}holidaze/venues${id ? `/${id}` : ''}`
+        `${import.meta.env.VITE_BASE_URL}holidaze/venues${id ? `/${id}?_owner=true&_bookings=true` : ''}`
       ).then(
         (result) => result.json()
       );
@@ -114,6 +112,41 @@ const useVenues = create((set) => ({
 }));
 
 export default useVenues;
+
+
+// export const useProfilesStore = create((set) => ({
+//   allProfiles: [],
+//   error: null,
+//   getAllProfiles: async (id = '') => {
+//     try {
+//       const response = await fetch(
+//         `${import.meta.env.VITE_BASE_URL}holidaze/profiles?_bookings=true&_venues=true`,
+//         {
+//           method: "GET",
+//           headers: {
+//             'content-Type': 'application/json'
+//           },
+//         }
+//       ).then(
+//         (result) => result.json()
+//       );
+//       if (id) {
+//         return response.data;
+//       } else {
+//         set(() => ({
+//           allProfiles: response.data,
+//           error: null,
+//         }));
+//       }
+      
+//     } catch (error) {
+//       console.log("Error fetching venues", error);
+//       set(() => ({
+//         error: error.message,
+//       }));
+//     }
+//   }
+// }))
 
 
 

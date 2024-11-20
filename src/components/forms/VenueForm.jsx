@@ -7,7 +7,7 @@ import Button from "../common/Buttons";
 const schema = yup
   .object({
     venueName: yup.string().required("Venue name is required"),
-    description: yup.string().required("Description is required").max(200),
+    description: yup.string().required("Description is required").max(160),
     images: yup
       .array()
       .of(yup.string().url("Invalid image URL"))

@@ -4,8 +4,6 @@ import { useState } from "react";
 function Carousel({ imageUrls }) {
   const [imageIndex, setImageIndex] = useState(0);
 
-  console.log(imageUrls)
-
   const showNextImage = () => {
     setImageIndex((index) => {
       if (index === imageUrls.length - 1) return 0;
