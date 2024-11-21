@@ -4,7 +4,7 @@ import { persist } from "zustand/middleware";
 export const useAuthStore = create(
   persist(
     (set) => ({
-      user: {}, 
+      user: {},
       token: null, // Store the token when user logs in
       error: null, // Error handling
       registeredUser: "",
@@ -16,21 +16,22 @@ export const useAuthStore = create(
             {
               method: "POST",
               headers: {
-                'content-Type': 'application/json',
+                "content-Type": "application/json",
               },
-              body: JSON.stringify({ "name": userData.name, "email": userData.email, "password": userData.password })
+              body: JSON.stringify({
+                name: userData.name,
+                email: userData.email,
+                password: userData.password,
+              }),
             }
-          ).then(
-            (result) => result.json()
-          );
+          ).then((result) => result.json());
 
-          if ( response.data) {
+          if (response.data) {
             set(() => ({
               registeredUser: "Successfully registered",
             }));
-            window.location.href = "/login"
+            window.location.href = "/login";
           }
-
         } catch (error) {
           console.log("Error fetching venues", error);
           set(() => ({
@@ -39,8 +40,7 @@ export const useAuthStore = create(
         }
       },
 
-      resetRegisteredUser: () => 
-        set({ registeredUser: "" }),
+      resetRegisteredUser: () => set({ registeredUser: "" }),
 
       loginUser: async (userData) => {
         try {
@@ -49,24 +49,23 @@ export const useAuthStore = create(
             {
               method: "POST",
               headers: {
-                'content-Type': 'application/json',
+                "content-Type": "application/json",
               },
-              body: JSON.stringify({ "email": userData.email, "password": userData.password })
+              body: JSON.stringify({
+                email: userData.email,
+                password: userData.password,
+              }),
             }
-          ).then(
-            (result) => result.json()
-          );
+          ).then((result) => result.json());
 
-          if ( response.data) {
-            
+          if (response.data) {
             const { accessToken, ...user } = response.data;
             set(() => ({
               token: accessToken,
               user: user,
             }));
-            window.location.href = "/"
+            window.location.href = "/";
           }
-
         } catch (error) {
           console.log("Error fetching venues", error);
           set(() => ({
@@ -75,8 +74,15 @@ export const useAuthStore = create(
         }
       },
 
-      logoutUser: () => 
-        set({token: null}),
+      logoutUser: () => {
+        console.log("Logging out...")
+        localStorage.clear();
+        set({ 
+          token: null, 
+          user: {} 
+        });
+        window.location.href = "/login";
+      },
     }),
     {
       name: "auth-storage", // Name in localStorage,
@@ -84,18 +90,17 @@ export const useAuthStore = create(
   )
 );
 
-
 const useVenues = create((set) => ({
   allVenues: [],
   error: null,
-  
-  getAllVenues: async (id = '') => {
+
+  getAllVenues: async (id = "") => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BASE_URL}holidaze/venues${id ? `/${id}?_owner=true&_bookings=true` : ''}`
-      ).then(
-        (result) => result.json()
-      );
+        `${import.meta.env.VITE_BASE_URL}holidaze/venues${
+          id ? `/${id}?_owner=true&_bookings=true` : ""
+        }`
+      ).then((result) => result.json());
       if (id) {
         return response.data;
       } else {
@@ -117,35 +122,34 @@ export default useVenues;
 export const useBookings = create((set) => ({
   allBookings: [],
   error: null,
-  getAllBookings: async (id = '') => {
+  getAllBookings: async (id = "") => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BASE_URL}holidaze/bookings${id ? `/${id}?_customer=true&_venue=true` : ''}`,
+        `${import.meta.env.VITE_BASE_URL}holidaze/bookings${
+          id ? `/${id}?_customer=true&_venue=true` : ""
+        }`,
         {
           method: "GET",
           headers: {
-            'content-Type': 'application/json',
+            "content-Type": "application/json",
           },
         }
-      ).then(
-        (result) => result.json()
-      );
+      ).then((result) => result.json());
       if (id) {
-        return response.data
+        return response.data;
       } else {
         set(() => ({
           allBookings: response.data,
         }));
-      }  
+      }
     } catch (error) {
       console.log("Error fetching venues", error);
       set(() => ({
         error: error.message,
-      }))
+      }));
     }
-  }
-}))
-
+  },
+}));
 
 // export const useProfilesStore = create((set) => ({
 //   allProfiles: [],
@@ -171,7 +175,7 @@ export const useBookings = create((set) => ({
 //           error: null,
 //         }));
 //       }
-      
+
 //     } catch (error) {
 //       console.log("Error fetching venues", error);
 //       set(() => ({
@@ -180,9 +184,6 @@ export const useBookings = create((set) => ({
 //     }
 //   }
 // }))
-
-
-
 
 // createToken: async (url, credentials) => {
 //   try {

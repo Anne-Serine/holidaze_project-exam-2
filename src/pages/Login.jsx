@@ -11,9 +11,9 @@ function Login() {
         />
       </div>
       <div className="h-[100vh] w-[50vw] absolute right-0 bg-daze-bg asymatrical-right flex items-center justify-center">
-        <div className="flex flex-col items-center gap-5 max-w-[20rem]">
+        <div className="flex flex-col items-center gap-5 max-w-[15rem]">
           <h1 className="text-3xl">Login</h1>
-          <h2 className="text-2xl mb-5">
+          <h2 className="text-xl mb-5">
             To be able to book your next adventure
           </h2>
           <LoginForm />
