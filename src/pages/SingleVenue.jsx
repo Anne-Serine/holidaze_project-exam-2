@@ -9,7 +9,6 @@ import {
 } from "lucide-react";
 import { useParams } from "react-router-dom";
 import Calendar from "../components/features/Calendar";
-import Button from "../components/common/Buttons";
 import Carousel from "../components/features/Carousel";
 import { useEffect, useState } from "react";
 import useVenues from "../hooks/Store";
@@ -102,12 +101,7 @@ function SingleVenue() {
           </div>
         </div>
         <div className="py-5 flex flex-col gap-4">
-          <div>
-            <Calendar venueData={venueData} />
-          </div>
-          <div>
-            <Button text="Book" />
-          </div>
+          <Calendar venueData={venueData} venueId={id} />
         </div>
       </section>
       }

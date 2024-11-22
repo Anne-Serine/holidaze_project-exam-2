@@ -75,11 +75,11 @@ export const useAuthStore = create(
       },
 
       logoutUser: () => {
-        console.log("Logging out...")
+        console.log("Logging out...");
         localStorage.clear();
-        set({ 
-          token: null, 
-          user: {} 
+        set({
+          token: null,
+          user: {},
         });
         window.location.href = "/login";
       },
@@ -144,6 +144,35 @@ export const useBookings = create((set) => ({
       }
     } catch (error) {
       console.log("Error fetching venues", error);
+      set(() => ({
+        error: error.message,
+      }));
+    }
+  },
+  createBooking: async (startDate, endDate, guests, venueId) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}holidaze/bookings`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${useAuthStore.getState().token}`,
+            "X-Noroff-API-Key": import.meta.env.VITE_API_KEY,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            dateFrom: startDate.toISOString(),
+            dateTo: endDate.toISOString(),
+            guests: guests,
+            venueId: venueId,
+          }),
+        }
+      ).then((result) => result.json());
+      if (response.data) {
+        return response.data;
+      }
+    } catch (error) {
+      console.log("Error creating a booking", error);
       set(() => ({
         error: error.message,
       }));

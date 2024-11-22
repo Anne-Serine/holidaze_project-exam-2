@@ -1,7 +1,7 @@
 import { Pen, Settings } from "lucide-react";
 import BookingCard from "../components/features/BookingCard";
 import VenueCard from "../components/features/VenueCard";
-import Calendar from "../components/features/Calendar";
+// import Calendar from "../components/features/Calendar";
 import { useAuthStore } from "../hooks/Store";
 
 function Profile() {
@@ -88,7 +88,7 @@ function Profile() {
           <div className="container grid grid-cols-[repeat(auto-fit,minmax(20rem,_1fr))] gap-5">
             <div className="">
               {/* Calendar component to show upcoming reservations from other people */}
-             <Calendar />
+             {/* <Calendar venueData={} /> */}
             </div>
             <div className="">
               <h2>Reservations on my venues</h2>
