@@ -1,13 +1,22 @@
 import { Pen, Settings } from "lucide-react";
 import BookingCard from "../components/features/BookingCard";
-import VenueCard from "../components/features/VenueCard";
 // import Calendar from "../components/features/Calendar";
-import { useAuthStore } from "../hooks/Store";
+import useVenues, { useAuthStore } from "../hooks/Store";
+import { useEffect } from "react";
 
 function Profile() {
 
   const user = useAuthStore((state) => state.user);
-  console.log(user.name)
+  const allVenues = useVenues((state) => state.allVenues);
+  const getAllVenues = useVenues((state) => state.getAllVenues);
+  const bookingsByProfile = useVenues((state) => state.bookingsByProfile);
+
+  useEffect(() => {
+    getAllVenues();
+  }, [getAllVenues]);
+
+  console.log(bookingsByProfile)
+  console.log(allVenues)
 
   return (
     <div>
@@ -55,10 +64,12 @@ function Profile() {
             My upcoming bookings <span>( 3 )</span>
           </h2>
           <div className="flex flex-col gap-2">
-            {/* Component */}
-            <BookingCard />
-            <BookingCard />
-            <BookingCard />
+            {bookingsByProfile && bookingsByProfile.length > 0 &&
+              bookingsByProfile.map((booking) => (
+                
+                <BookingCard key={booking.id} booking={booking} />
+              ))
+            }
           </div>
         </div>
         <div>
@@ -80,9 +91,7 @@ function Profile() {
         </div>
         <div className="container cards-grid">
           {/* Venue cards components */}
-         <VenueCard />
-         <VenueCard />
-         <VenueCard />
+         
         </div>
         <div className="bg-daze-primary-op10">
           <div className="container grid grid-cols-[repeat(auto-fit,minmax(20rem,_1fr))] gap-5">
@@ -94,9 +103,7 @@ function Profile() {
               <h2>Reservations on my venues</h2>
               <div className="flex flex-col gap-2">
                 {/* Reservations cards */}
-                <BookingCard type="dark" />
-                <BookingCard type="dark" />
-                <BookingCard type="dark" />
+               
               </div>
             </div>
           </div>

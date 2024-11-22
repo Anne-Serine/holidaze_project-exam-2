@@ -1,16 +1,37 @@
 import { Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
-function BookingCard({ type = "light" }) {
+function BookingCard({ booking, type = "light" }) {
+  const dateFrom = booking?.dateFrom
+    ? new Date(booking.dateFrom).toLocaleDateString()
+    : "No Date Available";
+
+  const dateTo = booking?.dateTo
+    ? new Date(booking.dateTo).toLocaleDateString()
+    : "No Date Available";
+
+  console.log(booking)
   const style = {
     light: "bg-daze-white ",
     dark: "bg-daze-gray text-daze-white",
   };
+
+  const firstDate = new Date(booking?.dateFrom)
+  const secondDate = new Date(booking?.dateTo)
+  const dateToday = new Date()
+  const firstDateInMs = firstDate.getTime()
+  const secondDateInMs = secondDate.getTime()
+  const dateTodayInMs = dateToday.getTime()
+  const differenceBtwDates = secondDateInMs - firstDateInMs
+  const differenceFromToday = secondDateInMs - dateTodayInMs
+  const daysDiff = Math.round(differenceBtwDates / (24 * 60 * 60 * 1000))
+  const daysUntilBooking = Math.round(differenceFromToday / (24 * 60 * 60 * 1000))
+
   return (
     <Link to="" className={`p-2 ${style[type]} flex flex-wrap gap-2`}>
       <div className="size-24">
         <img
-          src="/assets/hero-img.jpg"
+          src={booking.venueUrl}
           alt=""
           className="object-cover h-full w-full outline outline-daze-white outline-1 -outline-offset-[5px]"
         />
@@ -19,19 +40,19 @@ function BookingCard({ type = "light" }) {
         <div>
           <div className="flex gap-2">
             <span className="text-2xl font-['Cormorant_Garamond'] uppercase">
-              Cabin in the woods
+            {booking?.venueName || "Unknown Venue"}
             </span>
             <span className="flex items-center gap-1 text-sm"><img src="/assets/star.svg" alt="" />4.8</span>
           </div>
           <div className="flex gap-2 text-sm">
-            <span>10. november - 15.november</span>
+            <span>{dateFrom} - {dateTo}</span>
             &bull;
-            <span>5 days</span>
+            <span>{daysDiff} days</span>
           </div>
         </div>
         <div className="flex justify-between gap-2 text-sm">
-          <span>In 7 days</span>
-          <span className="flex gap-1 items-center"><Users size={16} /> 2 guests</span>
+          <span>In {daysUntilBooking} days</span>
+          <span className="flex gap-1 items-center"><Users size={16} />{booking?.guests}</span>
         </div>
       </div>
     </Link>

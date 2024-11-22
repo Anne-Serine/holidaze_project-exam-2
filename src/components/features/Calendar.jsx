@@ -41,13 +41,13 @@ function Calendar({venueData, venueId}) {
       />
       {token ? (
         <div className="flex gap-5">
-          <label className="flex flex-1 flex-col gap-2">How many guests are you?
+          <label className="flex flex-1 flex-col gap-2">Number of guests
             <input type="number" value={guests} className="px-5" onChange={(e) => setGuests(e.target.value)} max={venueData.maxGuests} min="1" />
           </label>
           <Button text="Book" onClick={() => createBooking( startDate, endDate, guests, venueId )} />
         </div>
       ) : (
-        <div>You have to <Link to="/login" className="italic text-daze-accent underline">login</Link> to create a booking</div>
+        <div>You have to <Link to={`/login?venueId=${venueId}`} className="italic text-daze-accent underline">login</Link> to create a booking</div>
       )}
     </>
   );
