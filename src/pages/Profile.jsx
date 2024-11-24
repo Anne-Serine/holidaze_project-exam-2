@@ -3,6 +3,8 @@ import BookingCard from "../components/features/BookingCard";
 // import Calendar from "../components/features/Calendar";
 import useVenues, { useAuthStore } from "../hooks/Store";
 import { useEffect } from "react";
+import Button from "../components/common/Buttons";
+import { useProfile } from "../hooks/useProfile";
 
 function Profile() {
 
@@ -10,6 +12,7 @@ function Profile() {
   const allVenues = useVenues((state) => state.allVenues);
   const getAllVenues = useVenues((state) => state.getAllVenues);
   const bookingsByProfile = useVenues((state) => state.bookingsByProfile);
+  const updateProfile = useProfile((state) => state.updateProfile);
 
   useEffect(() => {
     getAllVenues();
@@ -52,9 +55,20 @@ function Profile() {
           </p>
         </div>
         <div className="bg-daze-primary-op10 flex flex-col p-10 text-center justify-center mx-2 md:max-w-[24rem] w-full">
-          <h2 className="pb-5">Want to manage venues?</h2>
-          <p className="pb-5">Apply for venue manager rights</p>
-          <button className="bg-white p-3">APPLY</button>
+          {user.venueManager ? (
+            <>
+              <h2 className="pb-5">You are currently venue manager</h2>
+              <p className="pb-5">Still need the rights?</p>
+              <Button text="Remove" onClick={() => updateProfile(!user.venueManager)} />
+            </>
+          ) : (
+            <>
+              <h2 className="pb-5">Want to manage venues?</h2>
+              <p className="pb-5">Apply for venue manager rights</p>
+              <Button text="Apply" onClick={() => updateProfile(!user.venueManager)} />
+            </>
+          )}
+          
         </div>
       </section>
       <hr className="h-10 bg-daze-white" />
@@ -78,37 +92,39 @@ function Profile() {
       </div>
       
       {/* Admin profile  */}
-
-      <div className="my-5">
-        <h2 className="container">My venues</h2>
-        <div className="bg-daze-primary-op10">
-          <div className="container flex justify-center gap-10">
-            <button className="flex gap-2 items-center">
-              <Pen />
-              <p>Edit venue</p>
-            </button>
-          </div>
-        </div>
-        <div className="container cards-grid">
-          {/* Venue cards components */}
-         
-        </div>
-        <div className="bg-daze-primary-op10">
-          <div className="container grid grid-cols-[repeat(auto-fit,minmax(20rem,_1fr))] gap-5">
-            <div className="">
-              {/* Calendar component to show upcoming reservations from other people */}
-             {/* <Calendar venueData={} /> */}
+      {user.venueManager && 
+        <div className="my-5">
+          <h2 className="container">My venues</h2>
+          <div className="bg-daze-primary-op10">
+            <div className="container flex justify-center gap-10">
+              <button className="flex gap-2 items-center">
+                <Pen />
+                <p>Create new venue</p>
+              </button>
             </div>
-            <div className="">
-              <h2>Reservations on my venues</h2>
-              <div className="flex flex-col gap-2">
-                {/* Reservations cards */}
-               
+          </div>
+          <div className="container cards-grid">
+            {/* Venue cards components */}
+          
+          </div>
+          <div className="bg-daze-primary-op10">
+            <div className="container grid grid-cols-[repeat(auto-fit,minmax(20rem,_1fr))] gap-5">
+              <div className="">
+                {/* Calendar component to show upcoming reservations from other people */}
+              {/* <Calendar venueData={} /> */}
+              </div>
+              <div className="">
+                <h2>Reservations on my venues</h2>
+                <div className="flex flex-col gap-2">
+                  {/* Reservations cards */}
+                
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      }
+            
     </div>
   );
 }

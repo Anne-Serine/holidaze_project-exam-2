@@ -40,6 +40,13 @@ export const useAuthStore = create(
         }
       },
 
+      updateVenueManager: (venueManager) => set((state) => ({
+        user: {
+          ...state.user, 
+          venueManager: venueManager
+        }
+      })),
+
       resetRegisteredUser: () => set({ registeredUser: "" }),
 
       loginUser: async (userData) => {
@@ -104,7 +111,7 @@ const useVenues = create((set) => ({
       const response = await fetch(
         `${import.meta.env.VITE_BASE_URL}holidaze/venues${
           id ? `/${id}` : ""
-        }?_owner=true&_bookings=true`
+        }?_owner=true&_bookings=true&sort=created`
       ).then((result) => result.json());
       if (id) {
         return response.data;
@@ -128,6 +135,49 @@ const useVenues = create((set) => ({
       }
     } catch (error) {
       console.log("Error fetching venues", error);
+      set(() => ({
+        error: error.message,
+      }));
+    }
+  },
+  createVenue: async (venueData) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}holidaze/venues`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${useAuthStore.getState().token}`,
+            "X-Noroff-API-Key": import.meta.env.VITE_API_KEY,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: venueData.venueName,
+            description: venueData.description,
+            price: venueData.price,
+            maxGuests: venueData.maxGuests,
+            meta: {
+              wifi: venueData.wifi,
+              parking: venueData.parking,
+              breakfast: venueData.breakfast,
+              pets: venueData.pets,
+            },
+            location: {
+              address: venueData.address,
+              city: venueData.city,
+              zip: venueData.zipCode.toString(),
+              country: venueData.country,
+              lat: venueData.latitude,
+              lng: venueData.longitude,
+            }
+          }),
+        }
+      ).then((result) => result.json());
+      if (response.data) {
+        return response.data;
+      }
+    } catch (error) {
+      console.log("Error creating a venue", error);
       set(() => ({
         error: error.message,
       }));

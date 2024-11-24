@@ -3,6 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import Button from "../common/Buttons";
+import useVenues from "../../hooks/Store";
 
 const schema = yup
   .object({
@@ -26,12 +27,12 @@ const schema = yup
     parking: yup.boolean(),
     breakfast: yup.boolean(),
     pets: yup.boolean(),
-    country: yup.string(),
-    address: yup.string(),
-    zipCode: yup.number(),
-    town: yup.string(),
-    latitude: yup.number().typeError("Latitude must be a number"),
-    longitude: yup.number().typeError("Longitude must be a number"),
+    country: yup.string().optional(),
+    address: yup.string().optional(),
+    zipCode: yup.string().optional(),
+    town: yup.string().optional(),
+    latitude: yup.number().typeError("Latitude must be a number").optional(),
+    longitude: yup.number().typeError("Longitude must be a number").optional(),
   })
 
 function VenueForm(value) {
@@ -44,8 +45,10 @@ function VenueForm(value) {
   });
 
   const [onSubmit, setOnSubmit] = useState(false);
+  const createVenue = useVenues((state) => state.createVenue)
 
   function onSubmitHandler(data) {
+    createVenue(data);
     console.log("Form data:", data);
     setOnSubmit(true);
   }

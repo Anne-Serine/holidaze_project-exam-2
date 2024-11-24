@@ -2,9 +2,6 @@ import { ParkingCircle, PawPrint, Utensils, Wifi } from "lucide-react";
 import { Link } from "react-router-dom";
 
 function VenueCard({ image, name, price, rating, id, meta }) {
-  console.log(image)
-  console.log(id)
-  console.log(meta)
   return (
     <Link
       to={`/venue/${id}`}
