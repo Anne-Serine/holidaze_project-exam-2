@@ -188,6 +188,7 @@ const useVenues = create((set) => ({
 export default useVenues;
 
 export const useBookings = create((set) => ({
+  bookingsByProfile: [],
   error: null,
   // getBookingsByProfile: async () => {
   //   try {
@@ -244,6 +245,39 @@ export const useBookings = create((set) => ({
       }));
     }
   },
+  deleteBooking: async (id) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}holidaze/bookings/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${useAuthStore.getState().token}`,
+            "X-Noroff-API-Key": import.meta.env.VITE_API_KEY,
+          },
+        }
+      );
+  
+      if (response.ok) {
+        // Update the state to remove the deleted booking
+        const getAllVenues = useVenues.getState().getAllVenues;
+        await getAllVenues();
+        set((state) => ({
+          bookingsByProfile: state.bookingsByProfile.filter(
+            (booking) => booking.id !== id
+          ),
+        }));
+      } else {
+        console.error("Failed to delete the booking");
+      }
+    } catch (error) {
+      console.log("Error deleting the booking", error);
+      set(() => ({
+        error: error.message,
+      }));
+    }
+  },
+   
 }));
 
 // export const useProfilesStore = create((set) => ({

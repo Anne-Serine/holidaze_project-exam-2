@@ -1,5 +1,6 @@
-import { Users } from "lucide-react";
+import { Trash, Users } from "lucide-react";
 import { Link } from "react-router-dom";
+import useVenues, { useBookings } from "../../hooks/Store";
 
 function BookingCard({ booking, type = "light" }) {
   const dateFrom = booking?.dateFrom
@@ -27,6 +28,15 @@ function BookingCard({ booking, type = "light" }) {
   const daysDiff = Math.round(differenceBtwDates / (24 * 60 * 60 * 1000))
   const daysUntilBooking = Math.round(differenceFromToday / (24 * 60 * 60 * 1000))
 
+  const deleteBooking = useBookings((state) => state.deleteBooking);
+
+  const handleDelete = () => {
+    if (window.confirm(`Are you sure you want to delete this booking?`)) {
+      console.log(booking.id)
+      deleteBooking(booking.id);
+    }
+  };
+
   return (
     <Link to="" className={`p-2 ${style[type]} flex flex-wrap gap-2`}>
       <div className="size-24">
@@ -37,12 +47,15 @@ function BookingCard({ booking, type = "light" }) {
         />
       </div>
       <div className="flex flex-col justify-between flex-1 p-2 min-w-[18rem]">
-        <div>
-          <div className="flex gap-2">
-            <span className="text-2xl font-['Cormorant_Garamond'] uppercase">
-            {booking?.venueName || "Unknown Venue"}
-            </span>
-            <span className="flex items-center gap-1 text-sm"><img src="/assets/star.svg" alt="" />4.8</span>
+        <div className="flex flex-col justify-between">
+          <div className="flex justify-between">
+            <div className="flex gap-2">
+              <span className="text-2xl font-['Cormorant_Garamond'] uppercase">
+              {booking?.venueName || "Unknown Venue"}
+              </span>
+              <span className="flex items-center gap-1 text-sm"><img src="/assets/star.svg" alt="" />4.8</span>
+            </div>
+            <button><Trash color="#8B0404" size={20} onClick={handleDelete} /></button>
           </div>
           <div className="flex gap-2 text-sm">
             <span>{dateFrom} - {dateTo}</span>

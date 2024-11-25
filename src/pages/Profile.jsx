@@ -78,11 +78,14 @@ function Profile() {
             My upcoming bookings <span>( { bookingsByProfile.length} )</span>
           </h2>
           <div className="flex flex-col gap-2">
-            {bookingsByProfile && bookingsByProfile.length > 0 &&
+            {bookingsByProfile && bookingsByProfile.length > 0 ? (
               bookingsByProfile.map((booking) => (
                 
                 <BookingCard key={booking.id} booking={booking} />
               ))
+            ) : (
+              <p>No bookings yet.</p>
+            )
             }
           </div>
         </div>
