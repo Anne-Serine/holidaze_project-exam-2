@@ -52,7 +52,7 @@ export const useAuthStore = create(
       loginUser: async (userData) => {
         try {
           const response = await fetch(
-            `${import.meta.env.VITE_BASE_URL}auth/login`,
+            `${import.meta.env.VITE_BASE_URL}auth/login/?_holidaze=true`,
             {
               method: "POST",
               headers: {
@@ -228,11 +228,12 @@ export const useBookings = create((set) => ({
           body: JSON.stringify({
             dateFrom: startDate.toISOString(),
             dateTo: endDate.toISOString(),
-            guests: guests,
+            guests: Number(guests),
             venueId: venueId,
           }),
         }
       ).then((result) => result.json());
+      console.log(response)
       if (response.data) {
         return response.data;
       }

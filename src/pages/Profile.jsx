@@ -75,7 +75,7 @@ function Profile() {
       <div className="container my-5 grid grid-cols-[repeat(auto-fit,minmax(20rem,_1fr))] gap-5 ">
         <div className="">
           <h2>
-            My upcoming bookings <span>( 3 )</span>
+            My upcoming bookings <span>( { bookingsByProfile.length} )</span>
           </h2>
           <div className="flex flex-col gap-2">
             {bookingsByProfile && bookingsByProfile.length > 0 &&

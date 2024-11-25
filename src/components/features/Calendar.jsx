@@ -38,6 +38,8 @@ function Calendar({venueData, venueId}) {
         selectsRange
         inline
         excludeDateIntervals={bookedDates}
+        calendarStartDay={1}
+        minDate={new Date()}
       />
       {token ? (
         <div className="flex gap-5">
