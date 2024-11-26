@@ -2,7 +2,7 @@ import { useState } from "react";
 import DatePicker from "react-datepicker";
 import Button from "../common/Buttons";
 import { useAuthStore, useBookings } from "../../hooks/Store";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 
 function Calendar({venueData, venueId}) {
@@ -12,6 +12,7 @@ function Calendar({venueData, venueId}) {
   const [guests, setGuests] = useState(1);
   const createBooking = useBookings((state) => state.createBooking);
   const token = useAuthStore((state) => state.token)
+  const location = useLocation();
 
   const onChange = (dates) => {
     const [start, end] = dates;
@@ -40,17 +41,20 @@ function Calendar({venueData, venueId}) {
         excludeDateIntervals={bookedDates}
         calendarStartDay={1}
         minDate={new Date()}
+        calendarClassName="max-h-max"
       />
-      {token ? (
-        <div className="flex gap-5">
-          <label className="flex flex-1 flex-col gap-2">Number of guests
-            <input type="number" value={guests} className="px-5" onChange={(e) => setGuests(e.target.value)} max={venueData.maxGuests} min="1" />
-          </label>
-          <Button text="Book" onClick={() => createBooking( startDate, endDate, guests, venueId )} />
-        </div>
-      ) : (
-        <div>You have to <Link to={`/login?venueId=${venueId}`} className="italic text-daze-accent underline">login</Link> to create a booking</div>
-      )}
+      {location.pathname.includes("/venue/") ? (
+        token ? (
+          <div className="flex gap-5">
+            <label className="flex flex-1 flex-col gap-2">Number of guests
+              <input type="number" value={guests} className="px-5" onChange={(e) => setGuests(e.target.value)} max={venueData.maxGuests} min="1" />
+            </label>
+            <Button text="Book" onClick={() => createBooking( startDate, endDate, guests, venueId )} />
+          </div>
+        ) : (
+          <div>You have to <Link to={`/login?venueId=${venueId}`} className="italic text-daze-accent underline">login</Link> to create a booking</div>
+        )
+      ) : null }
     </>
   );
 };

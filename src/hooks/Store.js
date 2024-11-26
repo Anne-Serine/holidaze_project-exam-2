@@ -104,6 +104,7 @@ export const useAuthStore = create(
 const useVenues = create((set) => ({
   allVenues: [],
   bookingsByProfile: [],
+  venuesByProfile: [],
   error: null,
 
   getAllVenues: async (id = "") => {
@@ -116,6 +117,7 @@ const useVenues = create((set) => ({
       if (id) {
         return response.data;
       } else {
+        console.log(response.data)
         set(() => ({
           allVenues: response.data,
           bookingsByProfile: response.data.flatMap((venue) => {
@@ -126,11 +128,14 @@ const useVenues = create((set) => ({
                   ...booking,
                   venueName: venue.name, // Add the venue's name to each booking
                   venueUrl: venue.media[0].url,
+                  rating: venue.rating,
                 }));
             }
             return []; // Ensure flatMap doesn't add undefined values
           }),
-          
+          venuesByProfile: response.data.filter((venue) => {
+            return venue.owner.name === useAuthStore.getState().user.name
+          })
         }));
       }
     } catch (error) {
@@ -153,6 +158,10 @@ const useVenues = create((set) => ({
           },
           body: JSON.stringify({
             name: venueData.venueName,
+            media: [{
+              url: venueData.image,
+              alt: venueData.venueName,
+            }],
             description: venueData.description,
             price: venueData.price,
             maxGuests: venueData.maxGuests,
@@ -167,13 +176,12 @@ const useVenues = create((set) => ({
               city: venueData.city,
               zip: venueData.zipCode.toString(),
               country: venueData.country,
-              lat: venueData.latitude,
-              lng: venueData.longitude,
             }
           }),
         }
       ).then((result) => result.json());
       if (response.data) {
+        console.log(response)
         return response.data;
       }
     } catch (error) {

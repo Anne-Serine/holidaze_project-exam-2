@@ -23,6 +23,7 @@ function MainLayout() {
           <Route path="/login" element={<Login />} />
           <Route path="/venue/:id" element={<SingleVenue />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/venue/manage/" element={<VenueManagement />} />
           <Route path="/venue/manage/:id" element={<VenueManagement />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>

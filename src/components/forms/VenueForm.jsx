@@ -8,7 +8,7 @@ import useVenues from "../../hooks/Store";
 const schema = yup
   .object({
     venueName: yup.string().required("Venue name is required"),
-    description: yup.string().required("Description is required").max(160),
+    description: yup.string().required("Description is required").max(600),
     images: yup
       .array()
       .of(yup.string().url("Invalid image URL"))
@@ -31,8 +31,6 @@ const schema = yup
     address: yup.string().optional(),
     zipCode: yup.string().optional(),
     town: yup.string().optional(),
-    latitude: yup.number().typeError("Latitude must be a number").optional(),
-    longitude: yup.number().typeError("Longitude must be a number").optional(),
   })
 
 function VenueForm(value) {
@@ -67,6 +65,12 @@ function VenueForm(value) {
             className="w-full"
           />
           <p role="alert">{errors.venueName?.message}</p>
+        </div>
+
+        <div>
+          <label htmlFor="image" className="block">Image</label>
+          <input type="url" name="image" id="image" rows="8" title="Must be a live url" className="w-full" {...register("image")}></input>
+          <p role="alert">{errors.images?.message}</p>
         </div>
 
         <div>
@@ -132,18 +136,6 @@ function VenueForm(value) {
             <input type="text" id="country" className="w-full" {...register("country")} />
           </div>
 
-          <div className="flex gap-2">
-            <div className="flex flex-col w-full">
-              <label htmlFor="latitude">Latitude</label>
-              <input type="text" id="latitude" {...register("latitude")} />
-              <p role="alert">{errors.latitude?.message}</p>
-            </div>
-            <div className="flex flex-col w-full">
-              <label htmlFor="longitude">Longitude</label>
-              <input type="text" id="longitude" {...register("longitude")} />
-              <p role="alert">{errors.longitude?.message}</p>
-            </div>
-          </div>
         </fieldset>
 
         <div className="mt-5 mx-auto">

@@ -27,7 +27,7 @@ function Nav({ isOpen }) {
             </NavLink>
           </li>
           <li className="pb-3 md:py-0 bg-daze-bg">
-          <NavLink to="/venue/manage/:id" className={({ isActive }) =>
+          <NavLink to="/venue/manage/" className={({ isActive }) =>
             isActive
               ? "text-daze-accent bg-daze-gray p-1 px-4"
               : "hover:text-daze-accent hover:bg-daze-gray p-1 px-4"

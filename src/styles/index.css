@@ -133,6 +133,14 @@ h2.react-datepicker__current-month {
   }
 }
 
+.react-datepicker__day--keyboard-selected {
+  @apply bg-transparent;
+}
+
+.react-datepicker__day--excluded {
+  @apply bg-daze-secondary text-daze-white border-r-[50%];
+}
+
 .react-datepicker__navigation-icon::before {
   @apply border-daze-accent;
 }

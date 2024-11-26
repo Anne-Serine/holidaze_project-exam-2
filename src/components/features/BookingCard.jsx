@@ -1,8 +1,7 @@
-import { Trash, Users } from "lucide-react";
-import { Link } from "react-router-dom";
-import useVenues, { useBookings } from "../../hooks/Store";
+import { Info, Trash, Users } from "lucide-react";
+import { useBookings } from "../../hooks/Store";
 
-function BookingCard({ booking, type = "light" }) {
+function BookingCard({ booking, venueName, venueImage, rating, type = "light", ownBooking = true }) {
   const dateFrom = booking?.dateFrom
     ? new Date(booking.dateFrom).toLocaleDateString()
     : "No Date Available";
@@ -38,10 +37,10 @@ function BookingCard({ booking, type = "light" }) {
   };
 
   return (
-    <Link to="" className={`p-2 ${style[type]} flex flex-wrap gap-2`}>
+    <div className={`p-2 ${style[type]} flex flex-wrap gap-2`}>
       <div className="size-24">
         <img
-          src={booking.venueUrl}
+          src={venueImage}
           alt=""
           className="object-cover h-full w-full outline outline-daze-white outline-1 -outline-offset-[5px]"
         />
@@ -51,11 +50,20 @@ function BookingCard({ booking, type = "light" }) {
           <div className="flex justify-between">
             <div className="flex gap-2">
               <span className="text-2xl font-['Cormorant_Garamond'] uppercase">
-              {booking?.venueName || "Unknown Venue"}
+              {venueName || "Unknown Venue"}
               </span>
-              <span className="flex items-center gap-1 text-sm"><img src="/assets/star.svg" alt="" />4.8</span>
+              <span className="flex items-center gap-1 text-sm"><img src="/assets/star.svg" alt="" />{rating}</span>
             </div>
-            <button><Trash color="#8B0404" size={20} onClick={handleDelete} /></button>
+            {ownBooking ? (
+              <button title="delete booking">
+                <Trash color="#8B0404" size={20} onClick={handleDelete} />
+              </button>
+            ) : (
+              <button title="customer info">
+                <Info color="#C78D70" size={20} onClick={null} />
+              </button>
+            )
+            }
           </div>
           <div className="flex gap-2 text-sm">
             <span>{dateFrom} - {dateTo}</span>
@@ -68,7 +76,7 @@ function BookingCard({ booking, type = "light" }) {
           <span className="flex gap-1 items-center"><Users size={16} />{booking?.guests}</span>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
 
