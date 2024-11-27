@@ -18,7 +18,7 @@ function Profile() {
   const [bio, setBio] = useState(user.bio);
   const [showAvatar, setShowAvatar] = useState(false);
   const [avatar, setAvatar] = useState(user.avatar || { url: "", alt: "" });
-
+  const error = useProfile((state) => state.error);
 
   useEffect(() => {
     getAllVenues();
@@ -32,39 +32,21 @@ function Profile() {
             <img
               src={user.avatar?.url}
               className=" h-full w-full object-cover"
-              alt={user.avatar?.alt || "User avatar"}
+              alt={user.avatar?.alt}
             />
-            <div className="absolute pt-1 md:-right-[8.4rem] md:bottom-0 text-daze-white sm:text-daze-text">
+            <div className="absolute pt-1 md:left-[14rem] md:bottom-0 text-daze-white sm:text-daze-text w-full">
               <Button
-                text="Edit avatar" 
-                type="tertiary" 
-                icon={<Camera color="#C78D70" size={20} />} 
-                onClick={() => setShowAvatar(!showAvatar)} 
+                text={showAvatar ? "Close" : "Edit avatar"}
+                type="tertiary"
+                icon={<Camera color="#C78D70" size={20} />}
+                onClick={() => setShowAvatar(!showAvatar)}
               />
             </div>
-            {showAvatar ? (
-            <div className="flex flex-col gap-5 py-5">
-              <input
-                type="url"
-                name="avatar" 
-                id="avatar" 
-                className="p-5" 
-                value={avatar.url || ""}
-                placeholder="Enter avatar URL"
-                onChange={(e) => setAvatar({ ...avatar, url: e.target.value })}
-              />
-              <Button 
-                text="Save" 
-                onClick={() => {
-                  updateProfile({ avatar });
-                  setShowAvatar(false);
-                }} 
-              />
-            </div>
-          ) : null }
           </div>
           <div className="max-h-[200px] sm:ml-[14rem] pt-8 sm:pt-28 text-daze-white flex flex-col w-full justify-end text-center sm:text-start max-w-[18rem] sm:max-w-full">
-            <h1 className="text-2xl sm:text-4xl py-3 sm:py-0 pb-1 sm:p-0">{user.name}</h1>
+            <h1 className="text-2xl sm:text-4xl py-3 sm:py-0 pb-1 sm:p-0">
+              {user.name}
+            </h1>
             <div className="flex justify-center sm:justify-start items-center text-sm sm:text-base">
               <p>{user.email}</p>
             </div>
@@ -73,22 +55,84 @@ function Profile() {
       </div>
       <section className="container-hug flex flex-wrap">
         <div className="mt-5 sm:mt-16 m-2 mb-4 flex-1 min-w-[40%]">
+          {error && (
+            <div role="alert" className="bg-red-200 p-2 border border-red-400">
+              {error}
+            </div>
+          )}
+          {showAvatar ? (
+            <div className="flex flex-col gap-5">
+              <label className="flex flex-col">
+                Enter avatar URL
+                <input
+                  type="url"
+                  name="avatar"
+                  id="avatar"
+                  className="p-2 w-full max-w-[20rem]"
+                  value={avatar.url}
+                  placeholder="Enter avatar URL"
+                  onChange={(e) =>
+                    setAvatar({ ...avatar, url: e.target.value })
+                  }
+                />
+              </label>
+              <label className="flex flex-col">
+                Enter avatar alt
+                <input
+                  type="text"
+                  name="avatar-alt"
+                  id="avatar-alt"
+                  className="p-2 w-full max-w-[20rem]"
+                  value={avatar.alt}
+                  placeholder="Enter avatar alt"
+                  onChange={(e) =>
+                    setAvatar({ ...avatar, alt: e.target.value })
+                  }
+                />
+              </label>
+              <div className="max-w-max">
+                <Button
+                  text="Save"
+                  onClick={() => {
+                    updateProfile({ avatar });
+                    setShowAvatar(false);
+                  }}
+                />
+              </div>
+            </div>
+          ) : null}
           <h2 className="text-2xl">About me</h2>
-          <Button text="Edit bio" type="tertiary" icon={<Pen color="#C78D70" size={20} />} onClick={() => setShowBio(!showBio)} />
+          <Button
+            text={showBio ? "Close" : "Edit bio"}
+            type="tertiary"
+            icon={<Pen color="#C78D70" size={20} />}
+            onClick={() => setShowBio(!showBio)}
+          />
           {showBio ? (
             <div className="flex flex-col gap-5 py-5">
-              <textarea name="bio" id="bio" rows={8} className="p-5" value={bio} maxLength={160} onChange={(e) => setBio(e.target.value)}>
+              <textarea
+                name="bio"
+                id="bio"
+                rows={3}
+                className="p-5"
+                value={bio}
+                maxLength={160}
+                onChange={(e) => setBio(e.target.value)}
+                aria-label="Edit bio"
+              >
                 {bio}
               </textarea>
-              <Button text="Save" 
-                onClick={() => {
-                  updateProfile({bio: bio});
-                  setShowBio(false);
-                  setBio(bio);
-                }} 
-              />
+              <div className="max-w-max">
+                <Button
+                  text="Save"
+                  onClick={() => {
+                    updateProfile({ bio: bio });
+                    setShowBio(false);
+                    setBio(bio);
+                  }}
+                />
+              </div>
             </div>
-
           ) : (
             <p className="py-5">{user.bio ? user.bio : "No bio added yet"}</p>
           )}
@@ -100,7 +144,9 @@ function Profile() {
               <p className="pb-5">Still need the rights?</p>
               <Button
                 text="Remove"
-                onClick={() => updateProfile({venueManager: !user.venueManager})}
+                onClick={() =>
+                  updateProfile({ venueManager: !user.venueManager })
+                }
               />
             </>
           ) : (
@@ -109,7 +155,9 @@ function Profile() {
               <p className="pb-5">Apply for venue manager rights</p>
               <Button
                 text="Apply"
-                onClick={() => updateProfile({venueManager: !user.venueManager})}
+                onClick={() =>
+                  updateProfile({ venueManager: !user.venueManager })
+                }
               />
             </>
           )}
@@ -173,7 +221,13 @@ function Profile() {
             <h2 className="container">Reservations on my venues</h2>
             <div className="container flex flex-wrap gap-5">
               <div className="h-fit">
-                <Calendar venueData={{ bookings: venuesByProfile.reduce((venue, currentVenue) => { return venue.concat(currentVenue.bookings) }, []) }} />
+                <Calendar
+                  venueData={{
+                    bookings: venuesByProfile.reduce((venue, currentVenue) => {
+                      return venue.concat(currentVenue.bookings);
+                    }, []),
+                  }}
+                />
               </div>
               <div className="flex-[1_1_26rem]">
                 <div className="flex flex-col gap-2">

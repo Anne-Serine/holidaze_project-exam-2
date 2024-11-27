@@ -27,6 +27,11 @@ export const useProfile = create((set) => ({
         }
       ).then((result) => result.json());
       console.log(response)
+      if (response.errors) {
+        set(() => ({
+          error: response.errors[0].message,
+        }));
+      }
       if (response.data) {
         const updateUser = useAuthStore.getState().updateUser;
         updateUser(userData.venueManager, userData.bio, userData.avatar);
