@@ -1,4 +1,4 @@
-import { Pen, Settings } from "lucide-react";
+import { Camera, Pen } from "lucide-react";
 import BookingCard from "../components/features/BookingCard";
 import Calendar from "../components/features/Calendar";
 import useVenues, { useAuthStore } from "../hooks/Store";
@@ -16,6 +16,8 @@ function Profile() {
   const venuesByProfile = useVenues((state) => state.venuesByProfile);
   const [showBio, setShowBio] = useState(false);
   const [bio, setBio] = useState(user.bio);
+  const [showAvatar, setShowAvatar] = useState(false);
+  const [avatar, setAvatar] = useState(user.avatar || { url: "", alt: "" });
 
 
   useEffect(() => {
@@ -29,23 +31,48 @@ function Profile() {
           <div className="relative sm:absolute sm:top-10 size-[8rem] sm:size-[12rem] outline outline-daze-white outline-1 -outline-offset-[10px]">
             <img
               src={user.avatar?.url}
-              className=" h-full w-full object-cover "
-              alt={user.avatar?.alt}
+              className=" h-full w-full object-cover"
+              alt={user.avatar?.alt || "User avatar"}
             />
+            <div className="absolute pt-1 md:-right-[8.4rem] md:bottom-0 text-daze-white sm:text-daze-text">
+              <Button
+                text="Edit avatar" 
+                type="tertiary" 
+                icon={<Camera color="#C78D70" size={20} />} 
+                onClick={() => setShowAvatar(!showAvatar)} 
+              />
+            </div>
+            {showAvatar ? (
+            <div className="flex flex-col gap-5 py-5">
+              <input
+                type="url"
+                name="avatar" 
+                id="avatar" 
+                className="p-5" 
+                value={avatar.url || ""}
+                placeholder="Enter avatar URL"
+                onChange={(e) => setAvatar({ ...avatar, url: e.target.value })}
+              />
+              <Button 
+                text="Save" 
+                onClick={() => {
+                  updateProfile({ avatar });
+                  setShowAvatar(false);
+                }} 
+              />
+            </div>
+          ) : null }
           </div>
-          <div className="max-h-[200px] sm:ml-[14rem] sm:pt-28 text-daze-white flex flex-col w-full justify-end text-center sm:text-start max-w-[18rem] sm:max-w-full">
-            <h1 className="text-2xl sm:text-4xl py-3 sm:py-0">{user.name}</h1>
-            <div className="flex justify-between items-center text-sm sm:text-base">
+          <div className="max-h-[200px] sm:ml-[14rem] pt-8 sm:pt-28 text-daze-white flex flex-col w-full justify-end text-center sm:text-start max-w-[18rem] sm:max-w-full">
+            <h1 className="text-2xl sm:text-4xl py-3 sm:py-0 pb-1 sm:p-0">{user.name}</h1>
+            <div className="flex justify-center sm:justify-start items-center text-sm sm:text-base">
               <p>{user.email}</p>
-              <button className="flex gap-2 items-center">
-                <Settings size={20} /> Edit profile
-              </button>
             </div>
           </div>
         </div>
       </div>
       <section className="container-hug flex flex-wrap">
-        <div className="mt-10 m-2 mb-4 flex-1 min-w-[40%]">
+        <div className="mt-5 sm:mt-16 m-2 mb-4 flex-1 min-w-[40%]">
           <h2 className="text-2xl">About me</h2>
           <Button text="Edit bio" type="tertiary" icon={<Pen color="#C78D70" size={20} />} onClick={() => setShowBio(!showBio)} />
           {showBio ? (
