@@ -5,7 +5,7 @@ function VenueCard({ image, name, price, rating, id, meta }) {
   return (
     <Link
       to={`/venue/${id}`}
-      className="venue-card relative max-w-[30rem] w-full hover:scale-[101%] transition"
+      className="block venue-card relative max-w-[26rem] w-full hover:scale-[101%] transition"
     >
       <div className="relative h-[18rem] overflow-hidden justify-center items-center">
         {image && image.length &&

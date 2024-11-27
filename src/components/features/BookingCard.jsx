@@ -1,7 +1,6 @@
 import { Info, Trash, Users } from "lucide-react";
-import { useBookings } from "../../hooks/Store";
 
-function BookingCard({ booking, venueName, venueImage, rating, type = "light", ownBooking = true }) {
+function BookingCard({ booking, venueName, venueImage, rating, type = "light", ownBooking = true, openModal }) {
   const dateFrom = booking?.dateFrom
     ? new Date(booking.dateFrom).toLocaleDateString()
     : "No Date Available";
@@ -10,7 +9,6 @@ function BookingCard({ booking, venueName, venueImage, rating, type = "light", o
     ? new Date(booking.dateTo).toLocaleDateString()
     : "No Date Available";
 
-  console.log(booking)
   const style = {
     light: "bg-daze-white ",
     dark: "bg-daze-gray text-daze-white",
@@ -27,13 +25,8 @@ function BookingCard({ booking, venueName, venueImage, rating, type = "light", o
   const daysDiff = Math.round(differenceBtwDates / (24 * 60 * 60 * 1000))
   const daysUntilBooking = Math.round(differenceFromToday / (24 * 60 * 60 * 1000))
 
-  const deleteBooking = useBookings((state) => state.deleteBooking);
-
   const handleDelete = () => {
-    if (window.confirm(`Are you sure you want to delete this booking?`)) {
-      console.log(booking.id)
-      deleteBooking(booking.id);
-    }
+    return openModal(booking.id, venueName, "booking")
   };
 
   return (

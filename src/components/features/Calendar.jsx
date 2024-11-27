@@ -24,10 +24,6 @@ function Calendar({venueData, venueId}) {
     start: booking.dateFrom,
     end: booking.dateTo
   }));
-
-  console.log(createBooking)
-  console.log(venueData)
-  console.log(token)
   
   return (
     <>

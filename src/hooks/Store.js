@@ -40,14 +40,18 @@ export const useAuthStore = create(
         }
       },
 
-      updateUser: (venueManager, bio, avatar) => set((state) => ({
-        user: {
-          ...state.user, 
-          venueManager: venueManager !== undefined ? venueManager : state.user.venueManager,
-          bio: bio ? bio : state.user.bio,
-          avatar: avatar ? avatar : state.user.avatar,
-        }
-      })),
+      updateUser: (venueManager, bio, avatar) =>
+        set((state) => ({
+          user: {
+            ...state.user,
+            venueManager:
+              venueManager !== undefined
+                ? venueManager
+                : state.user.venueManager,
+            bio: bio ? bio : state.user.bio,
+            avatar: avatar ? avatar : state.user.avatar,
+          },
+        })),
 
       resetRegisteredUser: () => set({ registeredUser: "" }),
 
@@ -74,9 +78,9 @@ export const useAuthStore = create(
             }));
             const queryParams = new URLSearchParams(window.location.search);
             const venueId = queryParams.get("venueId");
-            venueId 
-              ? window.location.href=`/venue/${venueId}` 
-              : window.location.href = "/";
+            venueId
+              ? (window.location.href = `/venue/${venueId}`)
+              : (window.location.href = "/");
           }
         } catch (error) {
           console.log("Error fetching venues", error);
@@ -87,7 +91,6 @@ export const useAuthStore = create(
       },
 
       logoutUser: () => {
-        console.log("Logging out...");
         localStorage.clear();
         set({
           token: null,
@@ -118,13 +121,14 @@ const useVenues = create((set) => ({
       if (id) {
         return response.data;
       } else {
-        console.log(response.data)
         set(() => ({
           allVenues: response.data,
           bookingsByProfile: response.data.flatMap((venue) => {
             if (venue.bookings) {
               return venue.bookings
-                .filter((b) => b.customer.name === useAuthStore.getState().user.name)
+                .filter(
+                  (b) => b.customer.name === useAuthStore.getState().user.name
+                )
                 .map((booking) => ({
                   ...booking,
                   venueName: venue.name, // Add the venue's name to each booking
@@ -135,8 +139,8 @@ const useVenues = create((set) => ({
             return []; // Ensure flatMap doesn't add undefined values
           }),
           venuesByProfile: response.data.filter((venue) => {
-            return venue.owner.name === useAuthStore.getState().user.name
-          })
+            return venue.owner.name === useAuthStore.getState().user.name;
+          }),
         }));
       }
     } catch (error) {
@@ -159,10 +163,15 @@ const useVenues = create((set) => ({
           },
           body: JSON.stringify({
             name: venueData.venueName,
-            media: [{
-              url: venueData.image,
-              alt: venueData.venueName,
-            }],
+            ...(venueData.image && {
+              media: [
+                {
+                  url: venueData.image,
+                  alt: venueData.venueName,
+                },
+              ],
+            }),
+
             description: venueData.description,
             price: venueData.price,
             maxGuests: venueData.maxGuests,
@@ -177,16 +186,42 @@ const useVenues = create((set) => ({
               city: venueData.city,
               zip: venueData.zipCode.toString(),
               country: venueData.country,
-            }
+            },
           }),
         }
       ).then((result) => result.json());
+
       if (response.data) {
-        console.log(response)
-        return response.data;
+        window.location.href = `/venue/${response.data.id}`
       }
     } catch (error) {
       console.log("Error creating a venue", error);
+      set(() => ({
+        error: error.message,
+      }));
+    }
+  },
+  deleteVenue: async (id) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}holidaze/venues/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${useAuthStore.getState().token}`,
+            "X-Noroff-API-Key": import.meta.env.VITE_API_KEY,
+          },
+        }
+      );
+
+      if (response.ok) {
+        // Update the state to remove the deleted booking
+        useVenues.getState().getAllVenues();
+      } else {
+        console.error("Failed to delete the venue");
+      }
+    } catch (error) {
+      console.log("Error deleting the venue", error);
       set(() => ({
         error: error.message,
       }));
@@ -203,7 +238,7 @@ export const useBookings = create((set) => ({
   //   try {
   //     const allVenues = useVenues.getState().allVenues;
   //     const currentUser = useAuthStore.getState().user;
-  
+
   //     // Map through all venues and attach venue info to each booking
   //     const filteredBookings = allVenues
   //       .flatMap((venue) =>
@@ -215,7 +250,7 @@ export const useBookings = create((set) => ({
   //         }))
   //       )
   //       .filter((booking) => booking.customer.name === currentUser.name); // Filter bookings by current user
-  
+
   //     // Update Zustand state
   //     set({ bookingsByProfile: filteredBookings });
   //   } catch (error) {
@@ -223,7 +258,7 @@ export const useBookings = create((set) => ({
   //     set({ error: "Failed to fetch bookings by profile." });
   //   }
   // },
-  
+
   createBooking: async (startDate, endDate, guests, venueId) => {
     try {
       const response = await fetch(
@@ -243,7 +278,6 @@ export const useBookings = create((set) => ({
           }),
         }
       ).then((result) => result.json());
-      console.log(response)
       if (response.data) {
         return response.data;
       }
@@ -266,7 +300,7 @@ export const useBookings = create((set) => ({
           },
         }
       );
-  
+
       if (response.ok) {
         // Update the state to remove the deleted booking
         const getAllVenues = useVenues.getState().getAllVenues;
@@ -286,7 +320,6 @@ export const useBookings = create((set) => ({
       }));
     }
   },
-   
 }));
 
 // export const useProfilesStore = create((set) => ({

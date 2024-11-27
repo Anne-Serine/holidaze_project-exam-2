@@ -8,7 +8,6 @@ export const useProfile = create((set) => ({
   error: null,
   
   updateProfile: async (userData) => {
-    console.log(userData)
     try {
       const response = await fetch(
         `${import.meta.env.VITE_BASE_URL}holidaze/profiles/${name}`,
@@ -26,7 +25,6 @@ export const useProfile = create((set) => ({
           }),
         }
       ).then((result) => result.json());
-      console.log(response)
       if (response.errors) {
         set(() => ({
           error: response.errors[0].message,

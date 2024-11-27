@@ -1,7 +1,6 @@
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
 import Button from "../common/Buttons";
 import useVenues from "../../hooks/Store";
 
@@ -42,13 +41,10 @@ function VenueForm(value) {
     resolver: yupResolver(schema),
   });
 
-  const [onSubmit, setOnSubmit] = useState(false);
-  const createVenue = useVenues((state) => state.createVenue)
+  const createVenue = useVenues((state) => state.createVenue);
 
-  function onSubmitHandler(data) {
+  async function onSubmitHandler(data) {
     createVenue(data);
-    console.log("Form data:", data);
-    setOnSubmit(true);
   }
 
   return (
@@ -142,7 +138,6 @@ function VenueForm(value) {
           <Button text="Post" onClick={() => value} />
         </div>
       </form>
-      {onSubmit && <p>The form is submitted</p>}
     </>
   );
 }

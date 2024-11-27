@@ -1,12 +1,13 @@
-import { Camera, Pen } from "lucide-react";
+import { Camera, Pen, Trash } from "lucide-react";
 import BookingCard from "../components/features/BookingCard";
 import Calendar from "../components/features/Calendar";
-import useVenues, { useAuthStore } from "../hooks/Store";
-import { useEffect, useState } from "react";
+import useVenues, { useAuthStore, useBookings } from "../hooks/Store";
+import { useEffect, useRef, useState } from "react";
 import Button from "../components/common/Buttons";
 import { useProfile } from "../hooks/useProfile";
 import { Link } from "react-router-dom";
 import VenueCard from "../components/features/VenueCard";
+import Modal from "../components/common/Modal";
 
 function Profile() {
   const user = useAuthStore((state) => state.user);
@@ -20,9 +21,46 @@ function Profile() {
   const [avatar, setAvatar] = useState(user.avatar || { url: "", alt: "" });
   const error = useProfile((state) => state.error);
 
+  const deleteVenue = useVenues((state) => state.deleteVenue);
+  const [venueToDelete, setVenueToDelete] = useState(null);
+  const [venueNameToDelete, setVenueNameToDelete] = useState("");
+  const deleteBooking = useBookings((state) => state.deleteBooking);
+  
   useEffect(() => {
     getAllVenues();
   }, [getAllVenues]);
+
+  const dialogRef = useRef(null);
+
+  const deleteFunctionRef = useRef(null);
+
+  const openModal = (id, name, deleteType) => {
+    setVenueToDelete(id);
+    setVenueNameToDelete(name);
+    if (deleteType === "venue") {
+      deleteFunctionRef.current = () => deleteVenue(id); // Point to deleteVenue
+    } else if (deleteType === "booking") {
+      deleteFunctionRef.current = () => deleteBooking(id); // Point to deleteBooking
+    }
+    if (dialogRef.current) {
+      dialogRef.current.showModal();
+    }
+  };
+
+  const closeModal = () => {
+    setVenueToDelete(null);
+    setVenueNameToDelete("");
+    if (dialogRef.current) {
+      dialogRef.current.close();
+    }
+  };
+
+  const confirmDelete = () => {
+    if (venueToDelete && deleteFunctionRef.current) {
+      deleteFunctionRef.current(venueToDelete);
+      closeModal();
+    }
+  };
 
   return (
     <div>
@@ -34,7 +72,7 @@ function Profile() {
               className=" h-full w-full object-cover"
               alt={user.avatar?.alt}
             />
-            <div className="absolute pt-1 md:left-[14rem] md:bottom-0 text-daze-white sm:text-daze-text w-full">
+            <div className="absolute flex justify-center sm:justify-start md:left-[14rem] md:-bottom-1 text-daze-white sm:text-daze-text w-full">
               <Button
                 text={showAvatar ? "Close" : "Edit avatar"}
                 type="tertiary"
@@ -178,6 +216,7 @@ function Profile() {
                   venueName={booking.venueName}
                   venueImage={booking.venueUrl}
                   rating={booking.rating}
+                  openModal={(id, venueName, type) => openModal(id, venueName, type)}
                 />
               ))
             ) : (
@@ -203,20 +242,41 @@ function Profile() {
           <div className="container cards-grid">
             {venuesByProfile && venuesByProfile.length > 0 ? (
               venuesByProfile.map((venue) => (
-                <VenueCard
-                  key={venue.id}
-                  id={venue.id}
-                  image={venue.media}
-                  name={venue.name}
-                  price={venue.price}
-                  rating={venue.rating}
-                  meta={venue.meta}
-                />
+                <div key={venue.id} className="mb-3">
+                  <VenueCard
+                    id={venue.id}
+                    image={venue.media}
+                    name={venue.name}
+                    price={venue.price}
+                    rating={venue.rating}
+                    meta={venue.meta}
+                  />
+                  <div className="flex justify mt-2 gap-8">
+                    <Button
+                      text="Edit"
+                      type="tertiary"
+                      url={`/venue/manage/${venue.id}`}
+                      icon={<Pen size={20} />}
+                    />
+                    <Button
+                      text="Delete"
+                      type="tertiary"
+                      onClick={() => openModal(venue.id, venue.name, "venue")}
+                      icon={<Trash color="#8B0404" size={20} />}
+                    />
+                  </div>
+                </div>
               ))
             ) : (
               <p>No venues yet.</p>
             )}
           </div>
+          <Modal
+            dialogRef={dialogRef}
+            venueNameToDelete={venueNameToDelete}
+            closeModal={closeModal}
+            confirmDelete={confirmDelete}
+          />
           <div className="bg-daze-primary-op10 py-5">
             <h2 className="container">Reservations on my venues</h2>
             <div className="container flex flex-wrap gap-5">
