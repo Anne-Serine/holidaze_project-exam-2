@@ -7,7 +7,8 @@ const token = useAuthStore.getState().token;
 export const useProfile = create((set) => ({
   error: null,
   
-  updateProfile: async (venueManager) => {
+  updateProfile: async (userData) => {
+    console.log(userData)
     try {
       const response = await fetch(
         `${import.meta.env.VITE_BASE_URL}holidaze/profiles/${name}`,
@@ -19,14 +20,16 @@ export const useProfile = create((set) => ({
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            venueManager: venueManager,
+            venueManager: userData.venueManager !== undefined ? userData.venueManager : await useAuthStore.getState().user.venueManager,
+            bio: userData.bio,
+            avatar: userData.avatar,
           }),
         }
       ).then((result) => result.json());
       console.log(response)
       if (response.data) {
-        const updateVenueManager = useAuthStore.getState().updateVenueManager;
-        updateVenueManager(venueManager);
+        const updateUser = useAuthStore.getState().updateUser;
+        updateUser(userData.venueManager, userData.bio, userData.avatar);
         return response.data;
       }
     } catch (error) {

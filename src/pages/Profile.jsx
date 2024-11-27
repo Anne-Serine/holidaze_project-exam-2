@@ -2,7 +2,7 @@ import { Pen, Settings } from "lucide-react";
 import BookingCard from "../components/features/BookingCard";
 import Calendar from "../components/features/Calendar";
 import useVenues, { useAuthStore } from "../hooks/Store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Button from "../components/common/Buttons";
 import { useProfile } from "../hooks/useProfile";
 import { Link } from "react-router-dom";
@@ -14,12 +14,13 @@ function Profile() {
   const bookingsByProfile = useVenues((state) => state.bookingsByProfile);
   const updateProfile = useProfile((state) => state.updateProfile);
   const venuesByProfile = useVenues((state) => state.venuesByProfile);
+  const [showBio, setShowBio] = useState(false);
+  const [bio, setBio] = useState(user.bio);
+
 
   useEffect(() => {
     getAllVenues();
   }, [getAllVenues]);
-
-  console.log(venuesByProfile);
 
   return (
     <div>
@@ -27,9 +28,9 @@ function Profile() {
         <div className="container relative flex flex-col sm:flex-row items-center md:items-start md:h-full">
           <div className="relative sm:absolute sm:top-10 size-[8rem] sm:size-[12rem] outline outline-daze-white outline-1 -outline-offset-[10px]">
             <img
-              src="/assets/hero-img.jpg"
+              src={user.avatar?.url}
               className=" h-full w-full object-cover "
-              alt="profile picture"
+              alt={user.avatar?.alt}
             />
           </div>
           <div className="max-h-[200px] sm:ml-[14rem] sm:pt-28 text-daze-white flex flex-col w-full justify-end text-center sm:text-start max-w-[18rem] sm:max-w-full">
@@ -46,7 +47,24 @@ function Profile() {
       <section className="container-hug flex flex-wrap">
         <div className="mt-10 m-2 mb-4 flex-1 min-w-[40%]">
           <h2 className="text-2xl">About me</h2>
-          <p>{user.bio ? user.bio : "No bio added yet"}</p>
+          <Button text="Edit bio" type="tertiary" icon={<Pen color="#C78D70" size={20} />} onClick={() => setShowBio(!showBio)} />
+          {showBio ? (
+            <div className="flex flex-col gap-5 py-5">
+              <textarea name="bio" id="bio" rows={8} className="p-5" value={bio} maxLength={160} onChange={(e) => setBio(e.target.value)}>
+                {bio}
+              </textarea>
+              <Button text="Save" 
+                onClick={() => {
+                  updateProfile({bio: bio});
+                  setShowBio(false);
+                  setBio(bio);
+                }} 
+              />
+            </div>
+
+          ) : (
+            <p className="py-5">{user.bio ? user.bio : "No bio added yet"}</p>
+          )}
         </div>
         <div className="bg-daze-primary-op10 flex flex-col p-10 text-center justify-center mx-2 md:max-w-[24rem] w-full">
           {user.venueManager ? (
@@ -55,7 +73,7 @@ function Profile() {
               <p className="pb-5">Still need the rights?</p>
               <Button
                 text="Remove"
-                onClick={() => updateProfile(!user.venueManager)}
+                onClick={() => updateProfile({venueManager: !user.venueManager})}
               />
             </>
           ) : (
@@ -64,7 +82,7 @@ function Profile() {
               <p className="pb-5">Apply for venue manager rights</p>
               <Button
                 text="Apply"
-                onClick={() => updateProfile(!user.venueManager)}
+                onClick={() => updateProfile({venueManager: !user.venueManager})}
               />
             </>
           )}

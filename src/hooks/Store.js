@@ -40,10 +40,12 @@ export const useAuthStore = create(
         }
       },
 
-      updateVenueManager: (venueManager) => set((state) => ({
+      updateUser: (venueManager, bio, avatar) => set((state) => ({
         user: {
           ...state.user, 
-          venueManager: venueManager
+          venueManager: venueManager !== undefined ? venueManager : state.user.venueManager,
+          bio: bio ? bio : state.user.bio,
+          avatar: avatar ? avatar : state.user.avatar,
         }
       })),
 
@@ -64,7 +66,6 @@ export const useAuthStore = create(
               }),
             }
           ).then((result) => result.json());
-
           if (response.data) {
             const { accessToken, ...user } = response.data;
             set(() => ({
