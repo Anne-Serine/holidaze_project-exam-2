@@ -109,6 +109,7 @@ const useVenues = create((set) => ({
   allVenues: [],
   bookingsByProfile: [],
   venuesByProfile: [],
+  allSearchedVenues: [],
   error: null,
 
   getAllVenues: async (id = "") => {
@@ -228,6 +229,18 @@ const useVenues = create((set) => ({
       set(() => ({
         error: error.message,
       }));
+    }
+  },
+  searchVenues: async (query) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}holidaze/venues/search?q=${query}`
+      );
+      const data = await response.json();
+      set(() => ({ allSearchedVenues: data }));
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+      set(() => ({ error: error.message }));
     }
   },
 }));
