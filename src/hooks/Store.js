@@ -150,12 +150,14 @@ const useVenues = create((set) => ({
       }));
     }
   },
-  createVenue: async (venueData) => {
+  createVenue: async (venueData, id, type) => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BASE_URL}holidaze/venues`,
+        `${import.meta.env.VITE_BASE_URL}holidaze/venues${
+          id ? `/${id}` : ""
+        }`,
         {
-          method: "POST",
+          method: type,
           headers: {
             Authorization: `Bearer ${useAuthStore.getState().token}`,
             "X-Noroff-API-Key": import.meta.env.VITE_API_KEY,
@@ -184,13 +186,14 @@ const useVenues = create((set) => ({
             location: {
               address: venueData.address,
               city: venueData.city,
-              zip: venueData.zipCode.toString(),
+              zip: venueData.zipCode,
               country: venueData.country,
             },
           }),
         }
       ).then((result) => result.json());
 
+      console.log(response)
       if (response.data) {
         window.location.href = `/venue/${response.data.id}`
       }

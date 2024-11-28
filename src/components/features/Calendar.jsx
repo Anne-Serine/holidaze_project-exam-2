@@ -42,7 +42,7 @@ function Calendar({venueData, venueId}) {
       {location.pathname.includes("/venue/") ? (
         token ? (
           <div className="flex gap-5">
-            <label className="flex flex-1 flex-col gap-2">Number of guests
+            <label className="flex flex-1 flex-col gap-2">Guests (max {venueData.maxGuests} guests)
               <input type="number" value={guests} className="px-5" onChange={(e) => setGuests(e.target.value)} max={venueData.maxGuests} min="1" />
             </label>
             <Button text="Book" onClick={() => createBooking( startDate, endDate, guests, venueId )} />
