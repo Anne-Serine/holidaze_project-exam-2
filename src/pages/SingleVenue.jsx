@@ -165,7 +165,7 @@ function SingleVenue() {
       }
       <div id="amenities" className="bg-daze-gray py-2 text-daze-white">
         <div className="container">
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4">
             <p className="whitespace-nowrap">Amenities:</p>
             {venueData && 
               <div className="flex gap-8 items-center justify-center text-sm flex-1">

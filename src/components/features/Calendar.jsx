@@ -37,12 +37,12 @@ function Calendar({venueData, venueId}) {
         excludeDateIntervals={bookedDates}
         calendarStartDay={1}
         minDate={new Date()}
-        calendarClassName="max-h-max"
+        calendarClassName="max-h-max max-w-max"
       />
       {location.pathname.includes("/venue/") ? (
         token ? (
           <div className="flex gap-5">
-            <label className="flex flex-1 flex-col gap-2">Guests (max {venueData.maxGuests} guests)
+            <label className="flex flex-1 flex-col gap-2">Guests (max {venueData.maxGuests})
               <input type="number" value={guests} className="px-5" onChange={(e) => setGuests(e.target.value)} max={venueData.maxGuests} min="1" />
             </label>
             <Button text="Book" onClick={() => createBooking( startDate, endDate, guests, venueId )} />

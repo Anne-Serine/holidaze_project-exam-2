@@ -2,6 +2,7 @@ import Button from "./Buttons";
 import useVenues from "../../hooks/Store";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { CircleX, MapPin, SearchIcon } from "lucide-react";
 
 function Search() {
   const allSearchedVenues = useVenues((state) => state.allVenues);
@@ -20,8 +21,6 @@ function Search() {
         (venue) =>
           venue.name &&
           venue.name.toLowerCase().includes(searchTerm.toLowerCase())
-        // ||
-        // venue.description.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredVenues(filtered);
     } else {
@@ -31,7 +30,7 @@ function Search() {
 
   return (
     <>
-      <div className="flex">
+      <div className="flex relative items-center">
         <input
           type="search"
           placeholder="E.g Sunny Shores Bungalow"
@@ -40,14 +39,19 @@ function Search() {
           aria-controls="searchResults"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="bg-daze-white p-4 border-daze-primary-op50 border-[5px] border-r-0 w-full focus:outline-none focus:border-r-[5px] focus:border-daze-primary"
+          className="bg-daze-white p-4 border-daze-primary-op50 border-[5px] w-full focus:outline-none focus:border-daze-primary"
         />
-        <Button text="Search" />
+        <div className="absolute right-5">
+          {searchTerm ? (
+            <Button title="clear search results" type="tertiary" icon={<CircleX />} onClick={() => setSearchTerm("")}  />
+          ) : (
+            <SearchIcon />
+          )}
+        </div>
       </div>
       {searchTerm && (
-        <div>
           <ul
-            className=""
+            className="max-h-[22rem] overflow-y-auto z-10"
             aria-label="searchResult"
             aria-live="polite"
             id="searchResult"
@@ -61,10 +65,17 @@ function Search() {
                       setFilteredVenues([]);
                     }}
                     to={`/venue/${venue.id}`}
-                    className="flex gap-3 items-center text-sm truncate max-w-[70%]"
+                    className="text-sm justify-between"
                   >
-                    <img src={venue.media?.[0]?.url || ""} alt={venue.name} className="size-10" />
-                    {venue.name}
+                    <div className="flex gap-3 items-center w-full">
+                      <img src={venue.media?.[0]?.url || ""} alt={venue.name} className="size-10" />
+                      <div className="flex flex-1 flex-wrap gap-1 items-center justify-between">
+                        <span className="flex-[1_1_30rem]">{venue.name}</span>
+                        {venue.location.country &&
+                          <span className="flex gap-1 items-center"><MapPin size={16} />{venue.location.country}</span>
+                        }
+                      </div>
+                    </div>
                   </Link>               
                 </li>
               ))
@@ -72,7 +83,6 @@ function Search() {
               <li className="font-medium p-5 py-2 bg-daze-accent-op30">No search results...</li>
             )}
           </ul>
-        </div>
       )}
     </>
   );

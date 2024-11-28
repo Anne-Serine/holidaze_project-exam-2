@@ -61,7 +61,7 @@ function LoginForm() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            <Button text="Login" />
+            <Button text="Login" onClick={() => null} />
           </form>
     </div>
   )

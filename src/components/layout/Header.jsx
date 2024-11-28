@@ -31,10 +31,10 @@ function Header() {
           <img src="/assets/logo.svg" alt="Holidaze logo" />
         </Link>
         <button
-          className="p-3"
+          className="p-3 flex flex-col items-center text-sm"
           onClick={logoutUser}
           >
-          <UserRound size={30} className="scale-75 md:scale-100" />
+          <UserRound size={22} className="scale-75 md:scale-100" />
           {token ? "Logout" : "Login"}
         </button>
         <button
