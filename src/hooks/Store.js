@@ -105,11 +105,12 @@ export const useAuthStore = create(
   )
 );
 
-const useVenues = create((set) => ({
+const useVenues = create((set, get ) => ({
   allVenues: [],
   bookingsByProfile: [],
   venuesByProfile: [],
   allSearchedVenues: [],
+  currentPage: 1,
   error: null,
 
   getAllVenues: async (id = "") => {
@@ -117,7 +118,7 @@ const useVenues = create((set) => ({
       const response = await fetch(
         `${import.meta.env.VITE_BASE_URL}holidaze/venues${
           id ? `/${id}` : ""
-        }?_owner=true&_bookings=true&sort=created`
+        }?_owner=true&_bookings=true&sort=created&limit=24&page=${get().currentPage}`
       ).then((result) => result.json());
       if (id) {
         return response.data;
@@ -150,6 +151,16 @@ const useVenues = create((set) => ({
         error: error.message,
       }));
     }
+  },
+  nextPage: () => {
+    set(() => ({
+      currentPage: get().currentPage + 1,
+    }));
+  },
+  previousPage: () => {
+    set(() => ({
+      currentPage: get().currentPage > 1 ? get().currentPage - 1 : 1,
+    }));
   },
   createVenue: async (venueData, id, type) => {
     try {

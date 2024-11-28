@@ -8,10 +8,15 @@ function Home() {
 
   const venues = useVenues((state) => state.allVenues);
   const getAllVenues = useVenues((state) => state.getAllVenues);
+  const nextPage = useVenues((state) => state.nextPage);
+  const previousPage = useVenues((state) => state.previousPage);
+  const currentPage = useVenues((state) => state.currentPage);
 
   useEffect(() => {
     getAllVenues();
-  }, [getAllVenues])
+  }, [getAllVenues, currentPage])
+
+
 
   return (
     <>
@@ -57,9 +62,10 @@ function Home() {
             ))}
          
         </div>
-        <div className="flex justify-center mt-10 mb-5">
+        <div className="flex mx-auto max-w-max gap-8 mt-10 mb-5">
           {/* --- Pagination button --- */}
-          <Button text="More >" />
+          <Button text="< Prev" onClick={previousPage} />
+          <Button text="Next >" onClick={nextPage} />
         </div>
       </section>
 
@@ -86,17 +92,6 @@ function Home() {
           </div>
         </section>
       </div>
-      <section className="container">
-        <h2>Best offer</h2>
-        {/* Filtered best offer venues */}
-        <div className="cards-grid ">
-          <VenueCard />
-        </div>
-        <div className="flex justify-center mt-10 mb-5">
-          {/* --- Pagination button --- */}
-          <Button text="More >" />
-        </div>
-      </section>
     </>
   );
 }
