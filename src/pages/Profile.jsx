@@ -25,6 +25,7 @@ function Profile() {
   const [venueToDelete, setVenueToDelete] = useState(null);
   const [venueNameToDelete, setVenueNameToDelete] = useState("");
   const deleteBooking = useBookings((state) => state.deleteBooking);
+  const [successMessage, setSuccessMessage] = useState("");
   
   useEffect(() => {
     getAllVenues();
@@ -58,7 +59,12 @@ function Profile() {
   const confirmDelete = () => {
     if (venueToDelete && deleteFunctionRef.current) {
       deleteFunctionRef.current(venueToDelete);
-      closeModal();
+      setSuccessMessage(`You successfully deleted "${venueNameToDelete}"`)
+      setTimeout(() => {
+        closeModal();
+        setSuccessMessage("");
+      }, 3000)
+      
     }
   };
 
@@ -276,6 +282,7 @@ function Profile() {
             venueNameToDelete={venueNameToDelete}
             closeModal={closeModal}
             confirmDelete={confirmDelete}
+            successMessage={successMessage}
           />
           <div className="bg-daze-primary-op10 py-5">
             <h2 className="container">Reservations on my venues</h2>

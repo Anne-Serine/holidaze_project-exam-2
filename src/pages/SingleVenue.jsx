@@ -10,18 +10,27 @@ import {
 import { useParams } from "react-router-dom";
 import Calendar from "../components/features/Calendar";
 import Carousel from "../components/features/Carousel";
-import { useEffect, useState } from "react";
-import useVenues from "../hooks/Store";
+import { useEffect, useRef, useState } from "react";
+import useVenues, { useAuthStore } from "../hooks/Store";
+import Button from "../components/common/Buttons";
+import Modal from "../components/common/Modal";
 
 function SingleVenue() {
 
   const [venueData, setVenueData] = useState(null);
   const getAllVenues = useVenues((state) => state.getAllVenues);
   const { id } = useParams();
+  const user = useAuthStore((state) => state.user);
+
+  const deleteVenue = useVenues((state) => state.deleteVenue);
+  const [venueToDelete, setVenueToDelete] = useState(null);
+  const [venueNameToDelete, setVenueNameToDelete] = useState("")
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     async function fetchSingleVenue() {
       const data = await getAllVenues(id);
+      console.log(data)
       setVenueData(data);
     }
     { id && 
@@ -29,20 +38,69 @@ function SingleVenue() {
     }
   }, [getAllVenues, id]);
 
+  const dialogRef = useRef(null);
+
+  const deleteFunctionRef = useRef(null);
+
+  const openModal = (id, name, deleteType) => {
+    setVenueToDelete(id);
+    setVenueNameToDelete(name);
+    if (deleteType === "venue") {
+      deleteFunctionRef.current = () => deleteVenue(id); // Point to deleteVenue
+    }
+    if (dialogRef.current) {
+      dialogRef.current.showModal();
+    }
+  };
+
+  const closeModal = () => {
+    setVenueToDelete(null);
+    setVenueNameToDelete("");
+    if (dialogRef.current) {
+      dialogRef.current.close();
+    }
+  };
+
+  const confirmDelete = () => {
+    if (venueToDelete && deleteFunctionRef.current) {
+      deleteFunctionRef.current(venueToDelete);
+      setSuccessMessage(`You successfully deleted "${venueNameToDelete}"`)
+      setTimeout(() => {
+        window.location.href="/profile"
+      }, 3000)
+      
+    }
+  };
+
   return (
     <div>
-      <div className="bg-daze-primary-op10">
-        <div className="container flex justify-end gap-8 text-sm">
-          <button className="flex gap-1 items-center">
-            <Pen />
-            <p>Edit</p>
-          </button>
-          <button className="flex gap-1 items-center">
-            <Trash color="#8B0404" />
-            <p className="text-daze-red">Delete</p>
-          </button>
-        </div>
+      <div className="bg-daze-primary-op10 min-h-[3rem]">
+          <div className="container flex justify-end gap-8 text-sm">
+          {venueData && user.name === venueData.owner.name && user.venueManager &&
+            <>
+              <Button
+                text="Edit"
+                type="tertiary"
+                url={`/venue/manage/${venueData.id}`}
+                icon={<Pen size={20} />}
+              />
+              <Button
+                text="Delete"
+                type="tertiary"
+                onClick={() => openModal(venueData.id, venueData.name, "venue")}
+                icon={<Trash color="#8B0404" size={20} />}
+              />
+            </>
+          }
+          </div>
       </div>
+      <Modal
+        dialogRef={dialogRef}
+        venueNameToDelete={venueNameToDelete}
+        closeModal={closeModal}
+        confirmDelete={confirmDelete}
+        successMessage={successMessage}
+      />
       <section className="container">
         {/* Image carousel */}
         <Carousel imageUrls={venueData && venueData.media} />
