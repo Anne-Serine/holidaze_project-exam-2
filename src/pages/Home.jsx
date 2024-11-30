@@ -1,9 +1,23 @@
-import { ParkingCircle, PawPrint, Utensils, Wifi } from "lucide-react";
 import VenueCard from "../components/features/VenueCard";
 import Button from "../components/common/Buttons";
 import Search from "../components/common/Search";
+import useVenues from "../hooks/Store";
+import { useEffect } from "react";
 
 function Home() {
+
+  const venues = useVenues((state) => state.allVenues);
+  const getAllVenues = useVenues((state) => state.getAllVenues);
+  const nextPage = useVenues((state) => state.nextPage);
+  const previousPage = useVenues((state) => state.previousPage);
+  const currentPage = useVenues((state) => state.currentPage);
+
+  useEffect(() => {
+    getAllVenues();
+  }, [getAllVenues, currentPage])
+
+
+
   return (
     <>
       <div className="bg-daze-bg py-2">
@@ -24,42 +38,34 @@ function Home() {
           </div>
         </div>
       </div>
-      <hr className="h-10 bg-daze-white" />
+      <hr className="h-10 bg-daze-primary-op10" />
       <div className="container">
-        <h2 className="">Search venues</h2>
+        <h2>Search venues</h2>
         <Search />
       </div>
-      <div className="bg-daze-white py-2">
-        <div className="container flex justify-center gap-10">
-          <button className="flex flex-col items-center">
-            <Utensils />
-            Breakfast
-          </button>
-          <button className="flex flex-col items-center">
-            <Wifi />
-            Wifi
-          </button>
-          <button className="flex flex-col items-center">
-            <ParkingCircle />
-            Parking
-          </button>
-          <button className="flex flex-col items-center">
-            <PawPrint />
-            Pets
-          </button>
-        </div>
-      </div>
+      <hr className="h-10 mt-10 bg-daze-primary-op10" />
       <section className="container">
         <h2>Newest venues</h2>
         {/* List of venues */}
         <div className="cards-grid">
-          <VenueCard />
-          <VenueCard />
-          <VenueCard />
+          {venues.length > 0 &&
+            venues.map((venue) => (
+              <VenueCard 
+                key={venue.id}
+                id={venue.id}
+                image={venue.media}
+                name={venue.name}
+                price={venue.price}
+                rating={venue.rating}
+                meta={venue.meta}
+              />
+            ))}
+         
         </div>
-        <div className="flex justify-center mt-10 mb-5">
+        <div className="flex mx-auto max-w-max gap-8 mt-10 mb-5">
           {/* --- Pagination button --- */}
-          <Button text="More >" />
+          <Button text="< Prev" onClick={previousPage} />
+          <Button text="Next >" onClick={nextPage} />
         </div>
       </section>
 
@@ -86,19 +92,6 @@ function Home() {
           </div>
         </section>
       </div>
-      <section className="container">
-        <h2>Best offer</h2>
-        {/* Filtered best offer venues */}
-        <div className="cards-grid ">
-          <VenueCard />
-          <VenueCard />
-          <VenueCard />
-        </div>
-        <div className="flex justify-center mt-10 mb-5">
-          {/* --- Pagination button --- */}
-          <Button text="More >" />
-        </div>
-      </section>
     </>
   );
 }

@@ -1,53 +1,79 @@
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
 import Button from "../common/Buttons";
+import useVenues from "../../hooks/Store";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
-const schema = yup
-  .object({
-    venueName: yup.string().required("Venue name is required"),
-    description: yup.string().required("Description is required").max(200),
-    images: yup
-      .array()
-      .of(yup.string().url("Invalid image URL"))
-      .min(1, "At least one image is required"),
-    price: yup
-      .number()
-      .typeError("Price must be a number")
-      .positive("Price must be a positive number")
-      .required("Price is required"),
-    maxGuests: yup
-      .number()
-      .typeError("Max guests must be a number")
-      .positive("Max guests must be a positive number")
-      .required("Max guests is required"),
+const schema = yup.object({
+  venueName: yup.string().required("Venue name is required"),
+  description: yup.string().required("Description is required").max(600),
+  images: yup
+    .array()
+    .of(yup.string().url("Invalid image URL"))
+    .min(1, "At least one image is required"),
+  price: yup
+    .number()
+    .typeError("Price must be a number")
+    .positive("Price must be a positive number")
+    .required("Price is required"),
+  maxGuests: yup
+    .number()
+    .typeError("Max guests must be a number")
+    .positive("Max guests must be a positive number")
+    .required("Max guests is required"),
+  meta: yup.object ({
     wifi: yup.boolean(),
     parking: yup.boolean(),
     breakfast: yup.boolean(),
     pets: yup.boolean(),
-    country: yup.string(),
-    address: yup.string(),
-    zipCode: yup.number(),
-    town: yup.string(),
-    latitude: yup.number().typeError("Latitude must be a number"),
-    longitude: yup.number().typeError("Longitude must be a number"),
-  })
+  }),
+  location: yup.object ({
+    country: yup.string().optional(),
+    address: yup.string().optional(),
+    zipCode: yup.string().optional(),
+    city: yup.string().optional(),
+  }),
+});
 
 function VenueForm(value) {
   const {
     register,
     handleSubmit,
+    setValue,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
+    defaultValues: {},
   });
 
-  const [onSubmit, setOnSubmit] = useState(false);
+  const [venueData, setVenueData] = useState(null);
+  const getAllVenues = useVenues((state) => state.getAllVenues);
+  const { id } = useParams();
 
-  function onSubmitHandler(data) {
-    console.log("Form data:", data);
-    setOnSubmit(true);
+  useEffect(() => {
+    async function fetchSingleVenue() {
+      const data = await getAllVenues(id);
+      setVenueData(data);
+      if (data) {
+        reset(data); // Populate form with venueData
+      }
+    }
+    {
+      id && fetchSingleVenue();
+    }
+  }, [getAllVenues, id, reset]);
+
+  const createVenue = useVenues((state) => state.createVenue);
+
+  async function onSubmitHandler(data) {
+    const updatedData = {
+      ...venueData, // Existing data
+      ...data, // New updates from the form
+    }
+    await createVenue(updatedData, id, id ? "PUT" : "POST");
   }
 
   return (
@@ -57,89 +83,181 @@ function VenueForm(value) {
         className="flex flex-col gap-2 bg-daze-primary-op10 p-5 rounded-sm"
       >
         <div>
-          <label htmlFor="venueName" className="block">Venue name</label>
+          <label htmlFor="venueName" className="block">
+            Venue name
+          </label>
           <input
+            {...register("venueName")}
+            onChange={(e) => setValue("venueName", e.target.value)}
+            defaultValue={venueData?.name || ""}
             type="text"
-            id="venueName" {...register("venueName")}
+            id="venueName"
+            
             className="w-full"
           />
           <p role="alert">{errors.venueName?.message}</p>
         </div>
 
         <div>
-          <label htmlFor="description" className="block">Description</label>
-          <textarea name="description" id="description" rows="8" className="w-full" {...register("description")}></textarea>
+          <label htmlFor="image" className="block">
+            Image
+          </label>
+          <input
+            {...register("image")}
+            onChange={(e) => setValue("image", e.target.value)}
+            defaultValue={venueData ? venueData.media[0].url : ""}
+            type="url"
+            name="image"
+            id="image"
+            rows="8"
+            title="Must be a live url"
+            className="w-full"
+          ></input>
+          <p role="alert">{errors.images?.message}</p>
+        </div>
+
+        <div>
+          <label htmlFor="description" className="block">
+            Description
+          </label>
+          <textarea
+            {...register("description")}
+            onChange={(e) => setValue("description", e.target.value)}
+            defaultValue={venueData ? venueData.description : ""}
+            name="description"
+            id="description"
+            rows="8"
+            className="w-full"
+          >
+          </textarea>
           <p role="alert">{errors.description?.message}</p>
         </div>
 
         <div className="flex gap-2">
           <div className="flex flex-col w-full">
             <label htmlFor="price">Price</label>
-            <input type="text" id="price" {...register("price")} />
+            <input
+              {...register("price")}
+              onChange={(e) => setValue("price", e.target.value)}
+              defaultValue={venueData ? venueData.price : ""}
+              type="text"
+              id="price"
+            />
             <p role="alert">{errors.price?.message}</p>
           </div>
 
           <div className="flex flex-col w-full">
             <label htmlFor="maxGuests">Max guests</label>
-            <input type="text" id="maxGuests" {...register("maxGuests")} />
+            <input
+              {...register("maxGuests")}
+              onChange={(e) => setValue("maxGuests", e.target.value)}
+              defaultValue={venueData ? venueData.maxGuests : ""}
+              type="text"
+              id="maxGuests"
+            />
             <p role="alert">{errors.maxGuests?.message}</p>
           </div>
         </div>
 
         <fieldset>
-          <legend className="font-['Cormorant_Garamond'] uppercase mt-5 mb-3 border-b w-full border-b-daze-primary-op50">Amenities</legend>
+          <legend className="font-['Cormorant_Garamond'] uppercase mt-5 mb-3 border-b w-full border-b-daze-primary-op50">
+            Amenities
+          </legend>
           <label className="flex gap-2 items-center">
-            <input type="checkbox" name="pets" {...register("pets")} />
+            <input
+              {...register("pets")}
+              defaultChecked={ venueData?.meta.pets }
+              onChange={(e) => setValue("pets", e.target.checked)}
+              type="checkbox"
+              name="pets"
+            />
             Pets
           </label>
           <label className="flex gap-2 items-center">
-            <input type="checkbox" name="wifi" {...register("wifi")} />
+            <input
+              {...register("wifi")}
+              defaultChecked={ venueData?.meta.wifi }
+              onChange={(e) => setValue("wifi", e.target.checked)}
+              type="checkbox"
+              name="wifi"
+            />
             Wifi
           </label>
           <label className="flex gap-2 items-center">
-            <input type="checkbox" name="parking" {...register("parking")} />
+            <input
+              {...register("parking")}
+              defaultChecked={ venueData?.meta.parking }
+              onChange={(e) => setValue("parking", e.target.checked)}
+              type="checkbox"
+              name="parking"
+            />
             Parking
           </label>
           <label className="flex gap-2 items-center">
-            <input type="checkbox" name="breakfast" {...register("breakfast")} />
+            <input
+              {...register("breakfast")}
+              defaultChecked={ venueData?.meta.breakfast }
+              onChange={(e) => setValue("breakfast", e.target.checked)}
+              type="checkbox"
+              name="breakfast"
+            />
             Breakfast
           </label>
         </fieldset>
 
         <fieldset className="flex flex-col gap-2">
-          <legend className="font-['Cormorant_Garamond'] uppercase mt-5 mb-3 border-b w-full border-b-daze-primary-op50">Location</legend>
+          <legend className="font-['Cormorant_Garamond'] uppercase mt-5 mb-3 border-b w-full border-b-daze-primary-op50">
+            Location
+          </legend>
           <div>
-            <label htmlFor="address" className="block">Address</label>
-            <input type="text" id="address" className="w-full" {...register("address")} />
+            <label htmlFor="address" className="block">
+              Address
+            </label>
+            <input
+              {...register("address")}
+              defaultValue={venueData ? venueData.location.address : ""}
+              onChange={(e) => setValue("address", e.target.value)}
+              type="text"
+              id="address"
+              className="w-full"
+            />
           </div>
 
           <div className="flex gap-2">
             <div className="flex flex-col w-full">
               <label htmlFor="zipCode">Zip Code</label>
-              <input type="text" id="zipCode" {...register("zipCode")} />
+              <input
+                {...register("zipCode")}
+                defaultValue={venueData ? venueData.location.zip : ""}
+                onChange={(e) => setValue("zip", e.target.value)}
+                type="text"
+                id="zipCode"
+              />
             </div>
             <div className="flex flex-col w-full">
-              <label htmlFor="town">Town</label>
-              <input type="text" id="town" {...register("town")} />
+              <label htmlFor="town">City</label>
+              <input
+                {...register("city")}
+                defaultValue={venueData ? venueData.location.city : ""}
+                onChange={(e) => setValue("city", e.target.value)}
+                type="text"
+                id="city"
+              />
             </div>
           </div>
 
           <div>
-            <label htmlFor="country" className="block">Country</label>
-            <input type="text" id="country" className="w-full" {...register("country")} />
-          </div>
-
-          <div className="flex gap-2">
-            <div className="flex flex-col w-full">
-              <label htmlFor="latitude">Latitude</label>
-              <input type="text" id="latitude" {...register("latitude")} />
-              <p role="alert">{errors.latitude?.message}</p>
-            </div>
-            <div className="flex flex-col w-full">
-              <label htmlFor="longitude">Longitude</label>
-              <input type="text" id="longitude" {...register("longitude")} />
-              <p role="alert">{errors.longitude?.message}</p>
-            </div>
+            <label htmlFor="country" className="block">
+              Country
+            </label>
+            <input
+              {...register("country")}
+              defaultValue={venueData ? venueData.location.country : ""}
+              onChange={(e) => setValue("country", e.target.value)}
+              type="text"
+              id="country"
+              className="w-full"
+            />
           </div>
         </fieldset>
 
@@ -147,7 +265,6 @@ function VenueForm(value) {
           <Button text="Post" onClick={() => value} />
         </div>
       </form>
-      {onSubmit && <p>The form is submitted</p>}
     </>
   );
 }

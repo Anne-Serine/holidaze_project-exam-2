@@ -110,19 +110,19 @@ textarea {
 }
 
 h2.react-datepicker__current-month {
-  @apply p-4 text-daze-white text-xl;
+  @apply p-1 text-daze-white text-xl;
 }
 
 .react-datepicker__day {
-  @apply p-1 size-[2.25rem] md:p-3 md:size-[3.17rem];
+  @apply p-1 size-[2.25rem] md:p-2 md:size-[2.75rem];
 }
 
 .react-datepicker__day-name {
-  @apply p-1 size-[2.25rem] md:p-2 md:size-[3.17rem];
+  @apply p-1 size-[2.25rem]  md:size-[2.75rem];
 }
 
 .react-datepicker__navigation {
-  @apply top-7;
+  @apply top-4;
 
   &.react-datepicker__navigation--previous {
     @apply left-3;
@@ -133,12 +133,20 @@ h2.react-datepicker__current-month {
   }
 }
 
+.react-datepicker__day--keyboard-selected {
+  @apply bg-transparent;
+}
+
+.react-datepicker__day--excluded {
+  @apply bg-daze-secondary text-daze-white border-r-[50%];
+}
+
 .react-datepicker__navigation-icon::before {
-  @apply border-daze-primary-op10;
+  @apply border-daze-accent;
 }
 
 .react-datepicker__day--today {
-  @apply bg-daze-accent rounded-full;
+  @apply bg-daze-accent-op30 rounded-full;
 }
 
 
