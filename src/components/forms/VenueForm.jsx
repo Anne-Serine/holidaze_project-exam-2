@@ -52,6 +52,7 @@ function VenueForm(value) {
   const [venueData, setVenueData] = useState(null);
   const getAllVenues = useVenues((state) => state.getAllVenues);
   const { id } = useParams();
+  const error = useVenues((state) => state.error)
 
   useEffect(() => {
     async function fetchSingleVenue() {
@@ -261,7 +262,14 @@ function VenueForm(value) {
           </div>
         </fieldset>
 
-        <div className="mt-5 mx-auto">
+        <div className="mt-5 mx-auto text-center">
+          {error && 
+            <div className="container ">
+            <div role="alert" className="p-2 border border-daze-red bg-red-200 max-w-max text-daze-red">
+              {error}
+            </div>
+          </div>
+          }
           <Button text="Post" onClick={() => value} />
         </div>
       </form>

@@ -5,18 +5,16 @@ import useVenues from "../hooks/Store";
 import { useEffect } from "react";
 
 function Home() {
-
   const venues = useVenues((state) => state.allVenues);
   const getAllVenues = useVenues((state) => state.getAllVenues);
   const nextPage = useVenues((state) => state.nextPage);
   const previousPage = useVenues((state) => state.previousPage);
   const currentPage = useVenues((state) => state.currentPage);
+  const error = useVenues((state) => state.error);
 
   useEffect(() => {
     getAllVenues();
-  }, [getAllVenues, currentPage])
-
-
+  }, [getAllVenues, currentPage]);
 
   return (
     <>
@@ -46,11 +44,21 @@ function Home() {
       <hr className="h-10 mt-10 bg-daze-primary-op10" />
       <section className="container">
         <h2>Newest venues</h2>
+        {error && (
+          <div className="container">
+            <div
+              role="alert"
+              className="p-2 border border-daze-red bg-red-200 max-w-max text-daze-red"
+            >
+              {error}
+            </div>
+          </div>
+        )}
         {/* List of venues */}
         <div className="cards-grid">
           {venues.length > 0 &&
             venues.map((venue) => (
-              <VenueCard 
+              <VenueCard
                 key={venue.id}
                 id={venue.id}
                 image={venue.media}
@@ -60,7 +68,6 @@ function Home() {
                 meta={venue.meta}
               />
             ))}
-         
         </div>
         <div className="flex mx-auto max-w-max gap-8 mt-10 mb-5">
           {/* --- Pagination button --- */}

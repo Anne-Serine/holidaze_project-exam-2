@@ -26,7 +26,7 @@ function Profile() {
   const [venueNameToDelete, setVenueNameToDelete] = useState("");
   const deleteBooking = useBookings((state) => state.deleteBooking);
   const [successMessage, setSuccessMessage] = useState("");
-  
+
   useEffect(() => {
     getAllVenues();
   }, [getAllVenues]);
@@ -59,12 +59,11 @@ function Profile() {
   const confirmDelete = () => {
     if (venueToDelete && deleteFunctionRef.current) {
       deleteFunctionRef.current(venueToDelete);
-      setSuccessMessage(`You successfully deleted "${venueNameToDelete}"`)
+      setSuccessMessage(`You successfully deleted "${venueNameToDelete}"`);
       setTimeout(() => {
         closeModal();
         setSuccessMessage("");
-      }, 3000)
-      
+      }, 3000);
     }
   };
 
@@ -100,7 +99,10 @@ function Profile() {
       <section className="container-hug flex flex-wrap">
         <div className="mt-5 sm:mt-16 m-2 mb-4 flex-1 min-w-[40%]">
           {error && (
-            <div role="alert" className="bg-red-200 p-2 border border-red-400">
+            <div
+              role="alert"
+              className="bg-red-200 p-2 border text-daze-red border-daze-red"
+            >
               {error}
             </div>
           )}
@@ -152,6 +154,14 @@ function Profile() {
             icon={<Pen color="#C78D70" size={20} />}
             onClick={() => setShowBio(!showBio)}
           />
+          {error && (
+            <div
+              role="alert"
+              className="bg-red-200 p-2 border text-daze-red border-daze-red"
+            >
+              {error}
+            </div>
+          )}
           {showBio ? (
             <div className="flex flex-col gap-5 py-5">
               <textarea
@@ -213,6 +223,16 @@ function Profile() {
           <h2>
             My upcoming bookings <span>( {bookingsByProfile.length} )</span>
           </h2>
+          {error && (
+            <div className="container ">
+              <div
+                role="alert"
+                className="p-2 border border-daze-red bg-red-200 max-w-max text-daze-red"
+              >
+                {error}
+              </div>
+            </div>
+          )}
           <div className="flex flex-col gap-2">
             {bookingsByProfile && bookingsByProfile.length > 0 ? (
               bookingsByProfile.map((booking) => (
@@ -222,7 +242,9 @@ function Profile() {
                   venueName={booking.venueName}
                   venueImage={booking.venueUrl}
                   rating={booking.rating}
-                  openModal={(id, venueName, type) => openModal(id, venueName, type)}
+                  openModal={(id, venueName, type) =>
+                    openModal(id, venueName, type)
+                  }
                 />
               ))
             ) : (

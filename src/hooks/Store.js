@@ -121,7 +121,16 @@ const useVenues = create((set, get ) => ({
         }?_owner=true&_bookings=true&sort=created&limit=24&page=${get().currentPage}`
       ).then((result) => result.json());
       if (id) {
-        return response.data;
+        if (response.errors) {
+          set(() => ({
+            error: "Could not find venue: " + response.errors[0].message,
+          }));
+        } else {
+          set(() => ({
+            error: null,
+          }));
+          return response.data;
+        }
       } else {
         set(() => ({
           allVenues: response.data,
@@ -204,9 +213,16 @@ const useVenues = create((set, get ) => ({
           }),
         }
       ).then((result) => result.json());
-
+      if (response.errors) {
+        set(() => ({
+          error: response.errors[0].message,
+        }));
+      }
       console.log(response)
       if (response.data) {
+        set(() => ({
+          error: null,
+        }));
         window.location.href = `/venue/${response.data.id}`
       }
     } catch (error) {
@@ -230,10 +246,15 @@ const useVenues = create((set, get ) => ({
       );
 
       if (response.ok) {
+        set(() => ({
+          error: null,
+        }));
         // Update the state to remove the deleted booking
         useVenues.getState().getAllVenues();
       } else {
-        console.error("Failed to delete the venue");
+        set(() => ({
+          error: response.errors[0].message,
+        }));
       }
     } catch (error) {
       console.log("Error deleting the venue", error);
