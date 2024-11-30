@@ -22,7 +22,7 @@ function RegisterForm() {
 
   return (
     <div>
-      <form onSubmit={handleSubmit} id="registerForm">
+      <form onSubmit={handleSubmit} id="registerForm" className="flex flex-col items-center gap-2">
             <div>
               <label htmlFor="profileName">Profile name</label>
               <input
@@ -35,16 +35,6 @@ function RegisterForm() {
                 placeholder="E.g. TravelerUser"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="url">Profile picture</label>
-              <input
-                type="url"
-                name="url"
-                id="url"
-                title="The link has to be a live url"
-                placeholder="E.g. https://img.service.com/avatar.jpg"
               />
             </div>
             <div>
@@ -89,20 +79,9 @@ function RegisterForm() {
                 onChange={(e) => setPassword(e.target.password)}
               />
             </div>
-
-            {/* Consider to keep this option or not */}
-
-            <div className="">
-              <div className="flex gap-2">
-                <input type="radio" name="userRadio" id="userRadio" />
-                <label htmlFor="userRadio">User</label>
-              </div>
-              <div className="flex gap-2">
-                <input type="radio" name="managerRadio" id="managerRadio" />
-                <label htmlFor="managerRadio">Manager</label>
-              </div>
+            <div className="mt-5">
+              <Button text="Register" onClick={() => null} />
             </div>
-            <Button text="Register" />
           </form>
 
     </div>

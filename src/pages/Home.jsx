@@ -77,9 +77,9 @@ function Home() {
       </section>
 
       <div className="bg-daze-white">
-        <section className="container relative flex items-center justify-center h-[50vh]">
+        <section className="container relative flex items-center justify-center md:h-[50vh]">
           {/* Full width background image */}
-          <div className="w-full h-full py-5">
+          <div className="w-full h-full py-5 hidden md:block">
             <img
               src="/assets/most-visited-img.jpg"
               alt="a pool and sunbeds by the ocean"
@@ -87,14 +87,13 @@ function Home() {
             />
           </div>
           {/* Left side: overlay text content */}
-          <div className="absolute left-0 top-0 h-[50vh] p-7 px-2">
+          <div className="md:absolute left-0 top-0 md:h-[50vh] p-7 px-2">
             <div className="asymatrical-left bg-daze-accent text-daze-white p-8 pe-16 h-full">
-              <h2 className="text-2xl md:text-3xl mb-5">Most visited venues</h2>
+              <h2 className="text-2xl md:text-3xl mb-5">Get started</h2>
               <p className="max-w-[80%] mb-10">
-                Check out the most popular venues that everyone is visiting
-                right now!
+                Register and login to book, create and manage venues.
               </p>
-              <Button text="View" />
+              <Button text="Register" url="/register" />
             </div>
           </div>
         </section>

@@ -1,9 +1,9 @@
 import { NavLink } from "react-router-dom";
 
-function Nav({ isOpen }) {
+function Nav({ isOpen, closeMenu }) {
   return (
     <nav
-      className={`absolute md:relative bg-daze-bg top-[100%] w-full pb-2  ${
+      className={`absolute md:relative bg-daze-bg top-[100%] w-full pb-2 z-10  ${
         isOpen ? "block" : "hidden"
       }`}
     >
@@ -16,6 +16,7 @@ function Nav({ isOpen }) {
                 ? "text-daze-accent bg-daze-gray p-1 px-4"
                 : "hover:text-daze-accent hover:bg-daze-gray p-1 px-4"
             }
+            onClick={closeMenu}
           >
             EXPLORE
           </NavLink>
@@ -28,6 +29,7 @@ function Nav({ isOpen }) {
                 ? "text-daze-accent bg-daze-gray p-1 px-4"
                 : "hover:text-daze-accent hover:bg-daze-gray p-1 px-4"
             }
+            onClick={closeMenu}
           >
             PROFILE
           </NavLink>
@@ -40,6 +42,7 @@ function Nav({ isOpen }) {
                 ? "text-daze-accent bg-daze-gray p-1 px-4"
                 : "hover:text-daze-accent hover:bg-daze-gray p-1 px-4"
             }
+            onClick={closeMenu}
           >
             NEW VENUE
           </NavLink>

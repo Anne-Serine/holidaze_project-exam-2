@@ -26,13 +26,13 @@ function LoginForm() {
   },[registeredUser, resetRegisteredUser])
 
   return (
-    <div>
+    <div className="flex flex-col justify-center">
       {registeredUser.length > 0 &&
         <div>
           {registeredUser}
         </div>
       }
-      <form onSubmit={handleSubmit} id="loginForm" action="post">
+      <form onSubmit={handleSubmit} id="loginForm" action="post" className="flex flex-col items-center gap-2">
             <div>
               <label htmlFor="email">Email</label>
               <input
@@ -47,7 +47,7 @@ function LoginForm() {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <div className="mb-5">
+            <div>
               <label htmlFor="">Password</label>
               <input
                 type="password"
@@ -61,7 +61,9 @@ function LoginForm() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            <Button text="Login" onClick={() => null} />
+            <div className="mt-5">
+              <Button text="Login" onClick={() => null} />
+            </div>
           </form>
     </div>
   )

@@ -263,7 +263,7 @@ function VenueForm(value) {
         </fieldset>
 
         <div className="mt-5 mx-auto text-center">
-          {error && 
+          {error &&
             <div className="container ">
             <div role="alert" className="p-2 border border-daze-red bg-red-200 max-w-max text-daze-red">
               {error}
