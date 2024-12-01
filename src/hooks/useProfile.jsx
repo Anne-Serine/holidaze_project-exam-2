@@ -43,7 +43,7 @@ export const useProfile = create((set, get) => ({
       }));
     }
   },
-  getVenuesAndBookingsByProfile: async () => {
+  getBookingsByProfile: async () => {
     set({ loading: true });
     try {
       const response = await fetch(
@@ -57,12 +57,40 @@ export const useProfile = create((set, get) => ({
           },
         }
       ).then((result) => result.json());
-      console.log(response)
+      console.log("test",response)
       if (response.data) {
         set(() => ({
           loading: false,
           bookingsByProfile: response.data.bookings.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)),
-          venuesByProfile: response.data.venues.sort((a, b) => new Date(b.created) - new Date(a.created)),
+        }));
+      }
+    } catch (error) {
+      console.log("Error fetching venues", error);
+      set(() => ({
+        loading: false,
+        error: error.message,
+      }));
+    }
+  },
+  getVenuesByProfile: async () => {
+    set({ loading: true });
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}holidaze/profiles/${
+          useAuthStore.getState().user.name
+        }/venues?_bookings=true`, {
+          headers: {
+            Authorization: `Bearer ${useAuthStore.getState().token}`,
+            "X-Noroff-API-Key": import.meta.env.VITE_API_KEY,
+            "Content-Type": "application/json",
+          },
+        }
+      ).then((result) => result.json());
+      console.log("test",response)
+      if (response.data) {
+        set(() => ({
+          loading: false,
+          venuesByProfile: response.data.sort((a, b) => new Date(b.created) - new Date(a.created)),
         }));
       }
     } catch (error) {

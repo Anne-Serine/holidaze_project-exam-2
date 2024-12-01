@@ -52,7 +52,7 @@ function BookingCard({ booking, venueName, venueImage, rating, type = "light", o
                 <Trash color="#8B0404" size={20} onClick={handleDelete} />
               </button>
             ) : (
-              <button title="customer info">
+              <button title={`Customer: ${booking.customer.name}`}>
                 <Info color="#C78D70" size={20} onClick={null} />
               </button>
             )

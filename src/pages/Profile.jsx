@@ -12,9 +12,10 @@ import { GridLoader } from "react-spinners";
 
 function Profile() {
   const user = useAuthStore((state) => state.user);
-  const getVenuesAndBookingsByProfile = useProfile(
-    (state) => state.getVenuesAndBookingsByProfile
+  const getBookingsByProfile = useProfile(
+    (state) => state.getBookingsByProfile
   );
+  const getVenuesByProfile = useProfile((state) => state.getVenuesByProfile);
   const bookingsByProfile = useProfile((state) => state.bookingsByProfile);
   const updateProfile = useProfile((state) => state.updateProfile);
   const venuesByProfile = useProfile((state) => state.venuesByProfile);
@@ -31,9 +32,12 @@ function Profile() {
   const [successMessage, setSuccessMessage] = useState("");
   const loading = useProfile((state) => state.loading);
 
+  console.log("venues by profile:", venuesByProfile)
+
   useEffect(() => {
-    getVenuesAndBookingsByProfile();
-  }, [getVenuesAndBookingsByProfile]);
+    getBookingsByProfile();
+    getVenuesByProfile();
+  }, [getBookingsByProfile, getVenuesByProfile]);
 
   const dialogRef = useRef(null);
 
@@ -333,17 +337,19 @@ function Profile() {
                       <GridLoader color="#2F4A52" />
                     </div>
                   )}
-                  {!loading && bookingsByProfile && bookingsByProfile.length > 0
-                    ? bookingsByProfile.map((booking) => (
+                  {!loading && venuesByProfile && venuesByProfile.length > 0
+                    ? venuesByProfile.map((venue) => (
+                      venue.bookings && venue.bookings.map((booking) => (
                         <BookingCard
                           type="dark"
                           key={booking.id}
                           booking={booking}
-                          venueName={booking.venue.name}
-                          venueImage={booking.venue.media[0].url}
+                          venueName={venue.name}
+                          venueImage={venue.media[0].url}
                           ownBooking={false}
-                          rating={booking.venue.rating}
+                          rating={venue.rating}
                         />
+                      )) 
                       ))
                     : !loading && <p>No bookings on your venues yet.</p>}
                 </div>

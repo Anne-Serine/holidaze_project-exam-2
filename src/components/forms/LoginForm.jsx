@@ -1,72 +1,90 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Button from "../common/Buttons";
 import { useAuthStore } from "../../hooks/Store";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+
+const schema = yup.object({
+  userName: yup
+    .string()
+    .required("Username is required")
+    .matches(
+      /^[\w\-.]+@stud\.noroff\.no$/,
+      "Username must be a valid stud.noroff email address"
+    ),
+  password: yup.string().required("Password is required").min(8),
+});
 
 function LoginForm() {
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const loginUser = useAuthStore((state) => state.loginUser);
   const registeredUser = useAuthStore((state) => state.registeredUser);
-  const resetRegisteredUser = useAuthStore((state) => state.resetRegisteredUser);
-  
-  // const error = useAuthStore((state) => state.error);
- 
+  const resetRegisteredUser = useAuthStore(
+    (state) => state.resetRegisteredUser
+  );
+  const error = useAuthStore((state) => state.error);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    loginUser({ email, password });
-  };
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {},
+  });
+
+  async function onSubmitHandler(data) {
+    await loginUser({ email: data.userName, password: data.password });
+  }
 
   useEffect(() => {
-    registeredUser.length > 0 && 
+    registeredUser.length > 0 &&
       setTimeout(() => {
-        resetRegisteredUser()
+        resetRegisteredUser();
       }, 5000);
-  },[registeredUser, resetRegisteredUser])
+  }, [registeredUser, resetRegisteredUser]);
 
   return (
     <div className="flex flex-col justify-center">
-      {registeredUser.length > 0 &&
+      {registeredUser.length > 0 && <div>{registeredUser}</div>}
+      <form
+        onSubmit={handleSubmit(onSubmitHandler)}
+        id="loginForm"
+        action="post"
+        className="flex flex-col items-center gap-2"
+      >
         <div>
-          {registeredUser}
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            placeholder="E.g. traveller@stud.noroff.no"
+            {...register("userName")}
+            onChange={(e) => setValue("userName", e.target.value)}
+          />
+          <p role="alert">{errors.userName?.message}</p>
         </div>
-      }
-      <form onSubmit={handleSubmit} id="loginForm" action="post" className="flex flex-col items-center gap-2">
-            <div>
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                name="email"
-                id="email"
-                required
-                pattern="^[\w\-.]+@stud\.noroff\.no$"
-                title="The email must be a valid stud.noroff.no email address"
-                placeholder="E.g. traveller@stud.noroff.no"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="">Password</label>
-              <input
-                type="password"
-                name="password"
-                id="password"
-                required
-                minLength={8}
-                title="The password must be at least 8 characters long"
-                placeholder="********"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            <div className="mt-5">
-              <Button text="Login" onClick={() => null} />
-            </div>
-          </form>
+        <div>
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            placeholder="********"
+            {...register("password")}
+            onChange={(e) => setValue("password", e.target.value)}
+          />
+          <p role="alert">{errors.password?.message}</p>
+        </div>
+        {error && error.length > 0 && <p role="alert">{error}</p>}
+        <div className="mt-5">
+          <Button text="Login" onClick={() => null} />
+        </div>
+      </form>
     </div>
-  )
-};
+  );
+}
 
 export default LoginForm;

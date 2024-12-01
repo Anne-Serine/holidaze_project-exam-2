@@ -71,7 +71,15 @@ export const useAuthStore = create(
               }),
             }
           ).then((result) => result.json());
+          if (response.errors) {
+            set(() => ({
+              error: response.errors[0].message,
+            }));
+          }
           if (response.data) {
+            set(() => ({
+              error: null,
+            }));
             const { accessToken, ...user } = response.data;
             set(() => ({
               token: accessToken,
