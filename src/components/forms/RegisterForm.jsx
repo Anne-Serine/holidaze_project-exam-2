@@ -1,112 +1,121 @@
-import { useState } from "react";
 import { useAuthStore } from "../../hooks/Store";
 import Button from "../common/Buttons";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+
+const schema = yup.object({
+  profileName: yup
+    .string()
+    .required("Profile name is required")
+    .matches(
+      /^[\w]+$/,
+      "The name must not contain punctuation symbols apart from underscore (_)"
+    ),
+  email: yup
+    .string()
+    .required("Email is required")
+    .matches(
+      /^[\w\-.]+@stud\.noroff\.no$/,
+      "Email must be a valid stud.noroff email address"
+    ),
+  password: yup
+    .string()
+    .required("Password is required")
+    .min(8, "The password must be at least 8 characters long"),
+  confirmPassword: yup
+    .string()
+    .required("Confirm password")
+    .oneOf([yup.ref("password"), null], "Passwords must match"),
+});
 
 function RegisterForm() {
-
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const registerUser = useAuthStore((state) => state.registerUser);
-  // const error = useAuthStore((state) => state.error);
+  const error = useAuthStore((state) => state.error);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  
-    registerUser({ name, email, password });
-    setName("");
-    setEmail("");
-    setPassword("");
-  
+  const onSubmitHandler = (data) => {
+    if (data.password !== data.confirmPassword) {
+      return "Passwords don´t match";
+    }
+    registerUser({
+      name: data.profileName,
+      email: data.email,
+      password: data.password,
+    });
   };
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {},
+  });
 
   return (
     <div>
-      <form onSubmit={handleSubmit} id="registerForm">
-            <div>
-              <label htmlFor="profileName">Profile name</label>
-              <input
-                type="text"
-                name="name"
-                id="name"
-                required
-                pattern="^[\w]+$"
-                title="The name must not contain punctuation symbols apart from underscore (_)"
-                placeholder="E.g. TravelerUser"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="url">Profile picture</label>
-              <input
-                type="url"
-                name="url"
-                id="url"
-                title="The link has to be a live url"
-                placeholder="E.g. https://img.service.com/avatar.jpg"
-              />
-            </div>
-            <div>
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                name="email"
-                id="email"
-                required
-                pattern="^[\w\-.]+@stud\.noroff\.no$"
-                title="The email must be a valid stud.noroff.no email address"
-                placeholder="E.g. traveler@stud.noroff.no"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="">Password</label>
-              <input
-                type="password"
-                name="password"
-                id="password"
-                required
-                minLength={8}
-                title="The password must be at least 8 characters long"
-                placeholder="********"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="">Confirm password</label>
-              <input
-                type="password"
-                name="password"
-                id="password"
-                required
-                minLength={8}
-                title="The password must be at least 8 characters long"
-                placeholder="********"
-                value={password}
-                onChange={(e) => setPassword(e.target.password)}
-              />
-            </div>
-
-            {/* Consider to keep this option or not */}
-
-            <div className="">
-              <div className="flex gap-2">
-                <input type="radio" name="userRadio" id="userRadio" />
-                <label htmlFor="userRadio">User</label>
-              </div>
-              <div className="flex gap-2">
-                <input type="radio" name="managerRadio" id="managerRadio" />
-                <label htmlFor="managerRadio">Manager</label>
-              </div>
-            </div>
-            <Button text="Register" />
-          </form>
-
+      <form
+        onSubmit={handleSubmit(onSubmitHandler)}
+        id="registerForm"
+        className="flex flex-col items-center gap-2"
+      >
+        <div>
+          <label htmlFor="profileName">Profile name</label>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            placeholder="E.g. TravelerUser"
+            {...register("profileName")}
+            onChange={(e) => setValue("profileName", e.target.value)}
+          />
+          <p role="alert">{errors.profileName?.message}</p>
+        </div>
+        <div>
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            placeholder="E.g. traveler@stud.noroff.no"
+            {...register("email")}
+            onChange={(e) => setValue("email", e.target.value)}
+          />
+          <p role="alert">{errors.email?.message}</p>
+        </div>
+        <div>
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            placeholder="********"
+            {...register("password")}
+            onChange={(e) => setValue("password", e.target.value)}
+          />
+          <p role="alert">{errors.password?.message}</p>
+        </div>
+        <div>
+          <label htmlFor="confirmPassword">Confirm password</label>
+          <input
+            type="password"
+            name="confirmPassword"
+            id="confirmPassword"
+            required
+            {...register("confirmPassword")}
+            onChange={(e) => setValue("confirmPassword", e.target.value)}
+          />
+          <p role="alert">{errors.confirmPassword?.message}</p>
+        </div>
+        {error && error.length > 0 && <p role="alert">{error}</p>}
+        <div className="mt-5">
+          <Button text="Register" onClick={() => null} />
+        </div>
+      </form>
     </div>
   );
-};
+}
 
 export default RegisterForm;

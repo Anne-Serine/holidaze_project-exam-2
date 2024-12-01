@@ -23,13 +23,13 @@ const schema = yup.object({
     .typeError("Max guests must be a number")
     .positive("Max guests must be a positive number")
     .required("Max guests is required"),
-  meta: yup.object ({
+  meta: yup.object({
     wifi: yup.boolean(),
     parking: yup.boolean(),
     breakfast: yup.boolean(),
     pets: yup.boolean(),
   }),
-  location: yup.object ({
+  location: yup.object({
     country: yup.string().optional(),
     address: yup.string().optional(),
     zipCode: yup.string().optional(),
@@ -52,6 +52,7 @@ function VenueForm(value) {
   const [venueData, setVenueData] = useState(null);
   const getAllVenues = useVenues((state) => state.getAllVenues);
   const { id } = useParams();
+  const error = useVenues((state) => state.error);
 
   useEffect(() => {
     async function fetchSingleVenue() {
@@ -72,12 +73,13 @@ function VenueForm(value) {
     const updatedData = {
       ...venueData, // Existing data
       ...data, // New updates from the form
-    }
+    };
     await createVenue(updatedData, id, id ? "PUT" : "POST");
   }
 
   return (
     <>
+      <h1 className="text-3xl py-5">{id ? "Update venue" : "New venue"}</h1>
       <form
         onSubmit={handleSubmit(onSubmitHandler)}
         className="flex flex-col gap-2 bg-daze-primary-op10 p-5 rounded-sm"
@@ -92,7 +94,6 @@ function VenueForm(value) {
             defaultValue={venueData?.name || ""}
             type="text"
             id="venueName"
-            
             className="w-full"
           />
           <p role="alert">{errors.venueName?.message}</p>
@@ -128,8 +129,7 @@ function VenueForm(value) {
             id="description"
             rows="8"
             className="w-full"
-          >
-          </textarea>
+          ></textarea>
           <p role="alert">{errors.description?.message}</p>
         </div>
 
@@ -166,7 +166,7 @@ function VenueForm(value) {
           <label className="flex gap-2 items-center">
             <input
               {...register("pets")}
-              defaultChecked={ venueData?.meta.pets }
+              defaultChecked={venueData?.meta.pets}
               onChange={(e) => setValue("pets", e.target.checked)}
               type="checkbox"
               name="pets"
@@ -176,7 +176,7 @@ function VenueForm(value) {
           <label className="flex gap-2 items-center">
             <input
               {...register("wifi")}
-              defaultChecked={ venueData?.meta.wifi }
+              defaultChecked={venueData?.meta.wifi}
               onChange={(e) => setValue("wifi", e.target.checked)}
               type="checkbox"
               name="wifi"
@@ -186,7 +186,7 @@ function VenueForm(value) {
           <label className="flex gap-2 items-center">
             <input
               {...register("parking")}
-              defaultChecked={ venueData?.meta.parking }
+              defaultChecked={venueData?.meta.parking}
               onChange={(e) => setValue("parking", e.target.checked)}
               type="checkbox"
               name="parking"
@@ -196,7 +196,7 @@ function VenueForm(value) {
           <label className="flex gap-2 items-center">
             <input
               {...register("breakfast")}
-              defaultChecked={ venueData?.meta.breakfast }
+              defaultChecked={venueData?.meta.breakfast}
               onChange={(e) => setValue("breakfast", e.target.checked)}
               type="checkbox"
               name="breakfast"
@@ -261,8 +261,18 @@ function VenueForm(value) {
           </div>
         </fieldset>
 
-        <div className="mt-5 mx-auto">
-          <Button text="Post" onClick={() => value} />
+        <div className="mt-5 mx-auto text-center">
+          {error && (
+            <div className="container ">
+              <div
+                role="alert"
+                className="p-2 border border-daze-red bg-red-200 max-w-max text-daze-red"
+              >
+                {error}
+              </div>
+            </div>
+          )}
+          <Button text={id ? "Update" : "Post"} onClick={() => value} />
         </div>
       </form>
     </>

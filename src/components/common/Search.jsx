@@ -5,11 +5,12 @@ import { Link } from "react-router-dom";
 import { CircleX, MapPin, SearchIcon } from "lucide-react";
 
 function Search() {
-  const allSearchedVenues = useVenues((state) => state.allVenues);
+  const allSearchedVenues = useVenues((state) => state.allSearchedVenues);
   const searchVenues = useVenues((state) => state.searchVenues);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredVenues, setFilteredVenues] = useState([]);
+  const error = useVenues((state) => state.error);
 
   useEffect(() => {
     searchTerm.length > 0 && searchVenues(searchTerm);
@@ -43,46 +44,71 @@ function Search() {
         />
         <div className="absolute right-5">
           {searchTerm ? (
-            <Button title="clear search results" type="tertiary" icon={<CircleX />} onClick={() => setSearchTerm("")}  />
+            <Button
+              title="clear search results"
+              type="tertiary"
+              icon={<CircleX />}
+              onClick={() => setSearchTerm("")}
+            />
           ) : (
             <SearchIcon />
           )}
         </div>
       </div>
+      {error && (
+        <div
+          role="alert"
+          className="bg-red-200 p-2 border text-daze-red border-daze-red"
+        >
+          {error}
+        </div>
+      )}
       {searchTerm && (
-          <ul
-            className="max-h-[22rem] overflow-y-auto z-10"
-            aria-label="searchResult"
-            aria-live="polite"
-            id="searchResult"
-          >
-            {filteredVenues.length ? (
-              filteredVenues.map((venue) => (
-                <li key={venue.id} className="bg-white px-5 py-2 border rounded-sm hover:bg-daze-primary-op30">
-                  <Link
-                    onClick={() => {
-                      setSearchTerm("");
-                      setFilteredVenues([]);
-                    }}
-                    to={`/venue/${venue.id}`}
-                    className="text-sm justify-between"
-                  >
-                    <div className="flex gap-3 items-center w-full">
-                      <img src={venue.media?.[0]?.url || ""} alt={venue.name} className="size-10" />
-                      <div className="flex flex-1 flex-wrap gap-1 items-center justify-between">
-                        <span className="flex-[1_1_30rem]">{venue.name}</span>
-                        {venue.location.country &&
-                          <span className="flex gap-1 items-center"><MapPin size={16} />{venue.location.country}</span>
-                        }
-                      </div>
+        <ul
+          className="max-h-[22rem] overflow-y-auto z-10"
+          aria-label="searchResult"
+          aria-live="polite"
+          id="searchResult"
+        >
+          {filteredVenues.length ? (
+            filteredVenues.map((venue) => (
+              <li
+                key={venue.id}
+                className="bg-white px-5 py-2 border rounded-sm hover:bg-daze-primary-op30"
+              >
+                <Link
+                  onClick={() => {
+                    setSearchTerm("");
+                    setFilteredVenues([]);
+                  }}
+                  to={`/venue/${venue.id}`}
+                  className="text-sm justify-between"
+                >
+                  <div className="flex gap-3 items-center w-full">
+                    <img
+                      src={venue.media?.[0]?.url || ""}
+                      alt={venue.name}
+                      className="size-10"
+                    />
+                    <div className="flex flex-1 flex-wrap gap-1 items-center justify-between">
+                      <span className="flex-[1_1_30rem]">{venue.name}</span>
+                      {venue.location.country && (
+                        <span className="flex gap-1 items-center">
+                          <MapPin size={16} />
+                          {venue.location.country}
+                        </span>
+                      )}
                     </div>
-                  </Link>               
-                </li>
-              ))
-            ) : (
-              <li className="font-medium p-5 py-2 bg-daze-accent-op30">No search results...</li>
-            )}
-          </ul>
+                  </div>
+                </Link>
+              </li>
+            ))
+          ) : (
+            <li className="font-medium p-5 py-2 bg-daze-accent-op30">
+              No search results...
+            </li>
+          )}
+        </ul>
       )}
     </>
   );

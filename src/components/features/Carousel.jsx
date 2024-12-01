@@ -21,17 +21,17 @@ function Carousel({ imageUrls }) {
   return (
     <div className="relative max-w-[1200px] max-h-[500px] h-[70vw] mx-auto">
       <div className="w-full h-full flex overflow-hidden">
-        {imageUrls && imageUrls.length &&
-        imageUrls.map((imageUrl) => (
-          <img
-            key={imageUrl.url}
-            src={imageUrl.url}
-            alt=""
-            className={`img-slider-img`}
-            style={{ translate: `${-100 * imageIndex}%` }}
-          />
-        ))
-        }
+        {imageUrls &&
+          imageUrls.length &&
+          imageUrls.map((imageUrl, index) => (
+            <img
+              key={imageUrl.url + index}
+              src={imageUrl.url}
+              alt=""
+              className={`img-slider-img`}
+              style={{ translate: `${-100 * imageIndex}%` }}
+            />
+          ))}
       </div>
       <button className="img-slider-btn left-0" onClick={showPreviousImage}>
         <ChevronLeft />

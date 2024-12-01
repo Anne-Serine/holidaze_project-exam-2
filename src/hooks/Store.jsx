@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { useProfile } from "./useProfile";
 
 export const useAuthStore = create(
   persist(
@@ -33,7 +34,6 @@ export const useAuthStore = create(
             window.location.href = "/login";
           }
         } catch (error) {
-          console.log("Error fetching venues", error);
           set(() => ({
             error: error.message,
           }));
@@ -70,7 +70,15 @@ export const useAuthStore = create(
               }),
             }
           ).then((result) => result.json());
+          if (response.errors) {
+            set(() => ({
+              error: response.errors[0].message,
+            }));
+          }
           if (response.data) {
+            set(() => ({
+              error: null,
+            }));
             const { accessToken, ...user } = response.data;
             set(() => ({
               token: accessToken,
@@ -83,7 +91,6 @@ export const useAuthStore = create(
               : (window.location.href = "/");
           }
         } catch (error) {
-          console.log("Error fetching venues", error);
           set(() => ({
             error: error.message,
           }));
@@ -105,10 +112,8 @@ export const useAuthStore = create(
   )
 );
 
-const useVenues = create((set, get ) => ({
+const useVenues = create((set, get) => ({
   allVenues: [],
-  bookingsByProfile: [],
-  venuesByProfile: [],
   allSearchedVenues: [],
   currentPage: 1,
   error: null,
@@ -118,35 +123,32 @@ const useVenues = create((set, get ) => ({
       const response = await fetch(
         `${import.meta.env.VITE_BASE_URL}holidaze/venues${
           id ? `/${id}` : ""
-        }?_owner=true&_bookings=true&sort=created&limit=24&page=${get().currentPage}`
+        }?_owner=true&_bookings=true&sort=created&limit=24&page=${
+          get().currentPage
+        }`
       ).then((result) => result.json());
       if (id) {
-        return response.data;
+        if (response.errors) {
+          set(() => ({
+            error: "Could not find venue: " + response.errors[0].message,
+          }));
+        } else {
+          set(() => ({
+            error: null,
+          }));
+          return response.data;
+        }
       } else {
+        if (response.errors) {
+          set(() => ({
+            error: "Could not find venues: " + response.errors[0].message,
+          }));
+        }
         set(() => ({
           allVenues: response.data,
-          bookingsByProfile: response.data.flatMap((venue) => {
-            if (venue.bookings) {
-              return venue.bookings
-                .filter(
-                  (b) => b.customer.name === useAuthStore.getState().user.name
-                )
-                .map((booking) => ({
-                  ...booking,
-                  venueName: venue.name, // Add the venue's name to each booking
-                  venueUrl: venue.media[0].url,
-                  rating: venue.rating,
-                }));
-            }
-            return []; // Ensure flatMap doesn't add undefined values
-          }),
-          venuesByProfile: response.data.filter((venue) => {
-            return venue.owner.name === useAuthStore.getState().user.name;
-          }),
         }));
       }
     } catch (error) {
-      console.log("Error fetching venues", error);
       set(() => ({
         error: error.message,
       }));
@@ -165,9 +167,7 @@ const useVenues = create((set, get ) => ({
   createVenue: async (venueData, id, type) => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BASE_URL}holidaze/venues${
-          id ? `/${id}` : ""
-        }`,
+        `${import.meta.env.VITE_BASE_URL}holidaze/venues${id ? `/${id}` : ""}`,
         {
           method: type,
           headers: {
@@ -204,13 +204,18 @@ const useVenues = create((set, get ) => ({
           }),
         }
       ).then((result) => result.json());
-
-      console.log(response)
+      if (response.errors) {
+        set(() => ({
+          error: response.errors[0].message,
+        }));
+      }
       if (response.data) {
-        window.location.href = `/venue/${response.data.id}`
+        set(() => ({
+          error: null,
+        }));
+        window.location.href = `/venue/${response.data.id}`;
       }
     } catch (error) {
-      console.log("Error creating a venue", error);
       set(() => ({
         error: error.message,
       }));
@@ -230,13 +235,19 @@ const useVenues = create((set, get ) => ({
       );
 
       if (response.ok) {
+        set(() => ({
+          error: null,
+        }));
         // Update the state to remove the deleted booking
+        useProfile.getState().getBookingsByProfile();
+        useProfile.getState().getVenuesByProfile();
         useVenues.getState().getAllVenues();
       } else {
-        console.error("Failed to delete the venue");
+        set(() => ({
+          error: response.errors[0].message,
+        }));
       }
     } catch (error) {
-      console.log("Error deleting the venue", error);
       set(() => ({
         error: error.message,
       }));
@@ -246,9 +257,10 @@ const useVenues = create((set, get ) => ({
     try {
       const response = await fetch(
         `${import.meta.env.VITE_BASE_URL}holidaze/venues/search?q=${query}`
-      );
-      const data = await response.json();
-      set(() => ({ allSearchedVenues: data }));
+      ).then((result) => result.json());
+      if (response.data) {
+        set(() => ({ allSearchedVenues: response.data }));
+      }
     } catch (error) {
       console.error("Error fetching search results:", error);
       set(() => ({ error: error.message }));
@@ -261,30 +273,6 @@ export default useVenues;
 export const useBookings = create((set) => ({
   bookingsByProfile: [],
   error: null,
-  // getBookingsByProfile: async () => {
-  //   try {
-  //     const allVenues = useVenues.getState().allVenues;
-  //     const currentUser = useAuthStore.getState().user;
-
-  //     // Map through all venues and attach venue info to each booking
-  //     const filteredBookings = allVenues
-  //       .flatMap((venue) =>
-  //         venue.bookings.map((booking) => ({
-  //           ...booking,
-  //           venueName: venue.name, // Add venue name
-  //           venueLocation: venue.location, // Add venue location
-  //           venueImage: venue.image, // Add any other venue details you need
-  //         }))
-  //       )
-  //       .filter((booking) => booking.customer.name === currentUser.name); // Filter bookings by current user
-
-  //     // Update Zustand state
-  //     set({ bookingsByProfile: filteredBookings });
-  //   } catch (error) {
-  //     console.error("Error in getBookingsByProfile:", error);
-  //     set({ error: "Failed to fetch bookings by profile." });
-  //   }
-  // },
 
   createBooking: async (startDate, endDate, guests, venueId) => {
     try {
@@ -309,98 +297,9 @@ export const useBookings = create((set) => ({
         return response.data;
       }
     } catch (error) {
-      console.log("Error creating a booking", error);
-      set(() => ({
-        error: error.message,
-      }));
-    }
-  },
-  deleteBooking: async (id) => {
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BASE_URL}holidaze/bookings/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${useAuthStore.getState().token}`,
-            "X-Noroff-API-Key": import.meta.env.VITE_API_KEY,
-          },
-        }
-      );
-
-      if (response.ok) {
-        // Update the state to remove the deleted booking
-        const getAllVenues = useVenues.getState().getAllVenues;
-        await getAllVenues();
-        set((state) => ({
-          bookingsByProfile: state.bookingsByProfile.filter(
-            (booking) => booking.id !== id
-          ),
-        }));
-      } else {
-        console.error("Failed to delete the booking");
-      }
-    } catch (error) {
-      console.log("Error deleting the booking", error);
       set(() => ({
         error: error.message,
       }));
     }
   },
 }));
-
-// export const useProfilesStore = create((set) => ({
-//   allProfiles: [],
-//   error: null,
-//   getAllProfiles: async (id = '') => {
-//     try {
-//       const response = await fetch(
-//         `${import.meta.env.VITE_BASE_URL}holidaze/profiles?_bookings=true&_venues=true`,
-//         {
-//           method: "GET",
-//           headers: {
-//             'content-Type': 'application/json'
-//           },
-//         }
-//       ).then(
-//         (result) => result.json()
-//       );
-//       if (id) {
-//         return response.data;
-//       } else {
-//         set(() => ({
-//           allProfiles: response.data,
-//           error: null,
-//         }));
-//       }
-
-//     } catch (error) {
-//       console.log("Error fetching venues", error);
-//       set(() => ({
-//         error: error.message,
-//       }));
-//     }
-//   }
-// }))
-
-// createToken: async (url, credentials) => {
-//   try {
-//     const response = await axios.post(url, credentials);
-//     set({
-//       accessToken: response.data.accessToken,
-//       apiKey: response.data.apiKey,
-//       error: null,
-//     });
-//   } catch (error) {
-//     set({
-//       error: error.response ? error.response.data.message: "Failed to create token"
-//     });
-//   }
-// },
-
-//   clearToken: () => set({ accessToken: null, apiKey: null, error: null }),
-// }),
-// {
-//   name: 'auth-storage',
-//   getStorage: () => localStorage,
-// }

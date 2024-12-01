@@ -11,12 +11,12 @@
   }
   h1 {
     font-family: "Cormorant Garamond", Georgia, "Times New Roman", Times, serif;
-    font-size: 2.5rem;
+    font-size: 1.8rem;
     text-transform: uppercase;
   }
   h2 {
     font-family: "Cormorant Garamond", Georgia, "Times New Roman", Times, serif;
-    font-size: 2rem;
+    font-size: 1.5rem;
     text-transform: uppercase;
     margin: 1rem 0 1rem 0;
   }
@@ -71,6 +71,11 @@ textarea {
 
 .cards-grid {
   @apply grid grid-cols-[repeat(auto-fit,minmax(18rem,_1fr))] gap-5 justify-items-center;
+}
+
+p[role="alert"],
+div[role="alert"] {
+  @apply text-daze-red
 }
 
 

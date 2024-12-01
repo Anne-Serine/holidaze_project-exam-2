@@ -1,20 +1,24 @@
 import { Camera, Pen, Trash } from "lucide-react";
 import BookingCard from "../components/features/BookingCard";
 import Calendar from "../components/features/Calendar";
-import useVenues, { useAuthStore, useBookings } from "../hooks/Store";
+import useVenues, { useAuthStore } from "../hooks/Store";
 import { useEffect, useRef, useState } from "react";
 import Button from "../components/common/Buttons";
 import { useProfile } from "../hooks/useProfile";
 import { Link } from "react-router-dom";
 import VenueCard from "../components/features/VenueCard";
 import Modal from "../components/common/Modal";
+import { GridLoader } from "react-spinners";
 
 function Profile() {
   const user = useAuthStore((state) => state.user);
-  const getAllVenues = useVenues((state) => state.getAllVenues);
-  const bookingsByProfile = useVenues((state) => state.bookingsByProfile);
+  const getBookingsByProfile = useProfile(
+    (state) => state.getBookingsByProfile
+  );
+  const getVenuesByProfile = useProfile((state) => state.getVenuesByProfile);
+  const bookingsByProfile = useProfile((state) => state.bookingsByProfile);
   const updateProfile = useProfile((state) => state.updateProfile);
-  const venuesByProfile = useVenues((state) => state.venuesByProfile);
+  const venuesByProfile = useProfile((state) => state.venuesByProfile);
   const [showBio, setShowBio] = useState(false);
   const [bio, setBio] = useState(user.bio);
   const [showAvatar, setShowAvatar] = useState(false);
@@ -24,12 +28,14 @@ function Profile() {
   const deleteVenue = useVenues((state) => state.deleteVenue);
   const [venueToDelete, setVenueToDelete] = useState(null);
   const [venueNameToDelete, setVenueNameToDelete] = useState("");
-  const deleteBooking = useBookings((state) => state.deleteBooking);
+  const deleteBooking = useProfile((state) => state.deleteBooking);
   const [successMessage, setSuccessMessage] = useState("");
-  
+  const loading = useProfile((state) => state.loading);
+
   useEffect(() => {
-    getAllVenues();
-  }, [getAllVenues]);
+    getBookingsByProfile();
+    getVenuesByProfile();
+  }, [getBookingsByProfile, getVenuesByProfile]);
 
   const dialogRef = useRef(null);
 
@@ -59,12 +65,11 @@ function Profile() {
   const confirmDelete = () => {
     if (venueToDelete && deleteFunctionRef.current) {
       deleteFunctionRef.current(venueToDelete);
-      setSuccessMessage(`You successfully deleted "${venueNameToDelete}"`)
+      setSuccessMessage(`You successfully deleted "${venueNameToDelete}"`);
       setTimeout(() => {
         closeModal();
         setSuccessMessage("");
-      }, 3000)
-      
+      }, 3000);
     }
   };
 
@@ -100,7 +105,10 @@ function Profile() {
       <section className="container-hug flex flex-wrap">
         <div className="mt-5 sm:mt-16 m-2 mb-4 flex-1 min-w-[40%]">
           {error && (
-            <div role="alert" className="bg-red-200 p-2 border border-red-400">
+            <div
+              role="alert"
+              className="bg-red-200 p-2 border text-daze-red border-daze-red"
+            >
               {error}
             </div>
           )}
@@ -152,6 +160,14 @@ function Profile() {
             icon={<Pen color="#C78D70" size={20} />}
             onClick={() => setShowBio(!showBio)}
           />
+          {error && (
+            <div
+              role="alert"
+              className="bg-red-200 p-2 border text-daze-red border-daze-red"
+            >
+              {error}
+            </div>
+          )}
           {showBio ? (
             <div className="flex flex-col gap-5 py-5">
               <textarea
@@ -213,21 +229,36 @@ function Profile() {
           <h2>
             My upcoming bookings <span>( {bookingsByProfile.length} )</span>
           </h2>
+          {error && (
+            <div className="container ">
+              <div
+                role="alert"
+                className="p-2 border border-daze-red bg-red-200 max-w-max text-daze-red"
+              >
+                {error}
+              </div>
+            </div>
+          )}
           <div className="flex flex-col gap-2">
-            {bookingsByProfile && bookingsByProfile.length > 0 ? (
-              bookingsByProfile.map((booking) => (
-                <BookingCard
-                  key={booking.id}
-                  booking={booking}
-                  venueName={booking.venueName}
-                  venueImage={booking.venueUrl}
-                  rating={booking.rating}
-                  openModal={(id, venueName, type) => openModal(id, venueName, type)}
-                />
-              ))
-            ) : (
-              <p>No bookings yet.</p>
+            {loading && (
+              <div className="flex justify-center p-5">
+                <GridLoader color="#2F4A52" />
+              </div>
             )}
+            {!loading && bookingsByProfile && bookingsByProfile.length > 0
+              ? bookingsByProfile.map((booking) => (
+                  <BookingCard
+                    key={booking.id}
+                    booking={booking}
+                    venueName={booking.venue.name}
+                    venueImage={booking.venue.media[0].url}
+                    rating={booking.venue.rating}
+                    openModal={(id, venueName, type) =>
+                      openModal(id, venueName, type)
+                    }
+                  />
+                ))
+              : !loading && <p>No bookings yet.</p>}
           </div>
         </div>
         <div></div>
@@ -246,36 +277,39 @@ function Profile() {
             </div>
           </div>
           <div className="container cards-grid">
-            {venuesByProfile && venuesByProfile.length > 0 ? (
-              venuesByProfile.map((venue) => (
-                <div key={venue.id} className="mb-3">
-                  <VenueCard
-                    id={venue.id}
-                    image={venue.media}
-                    name={venue.name}
-                    price={venue.price}
-                    rating={venue.rating}
-                    meta={venue.meta}
-                  />
-                  <div className="flex justify mt-2 gap-8">
-                    <Button
-                      text="Edit"
-                      type="tertiary"
-                      url={`/venue/manage/${venue.id}`}
-                      icon={<Pen size={20} />}
-                    />
-                    <Button
-                      text="Delete"
-                      type="tertiary"
-                      onClick={() => openModal(venue.id, venue.name, "venue")}
-                      icon={<Trash color="#8B0404" size={20} />}
-                    />
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p>No venues yet.</p>
+            {loading && (
+              <div className="flex justify-center p-5">
+                <GridLoader color="#2F4A52" />
+              </div>
             )}
+            {!loading && venuesByProfile && venuesByProfile.length > 0
+              ? venuesByProfile.map((venue) => (
+                  <div key={venue.id} className="mb-3">
+                    <VenueCard
+                      id={venue.id}
+                      image={venue.media}
+                      name={venue.name}
+                      price={venue.price}
+                      rating={venue.rating}
+                      meta={venue.meta}
+                    />
+                    <div className="flex justify mt-2 gap-8">
+                      <Button
+                        text="Edit"
+                        type="tertiary"
+                        url={`/venue/manage/${venue.id}`}
+                        icon={<Pen size={20} />}
+                      />
+                      <Button
+                        text="Delete"
+                        type="tertiary"
+                        onClick={() => openModal(venue.id, venue.name, "venue")}
+                        icon={<Trash color="#8B0404" size={20} />}
+                      />
+                    </div>
+                  </div>
+                ))
+              : !loading && <p>No venues yet.</p>}
           </div>
           <Modal
             dialogRef={dialogRef}
@@ -290,31 +324,34 @@ function Profile() {
               <div className="h-fit">
                 <Calendar
                   venueData={{
-                    bookings: venuesByProfile.reduce((venue, currentVenue) => {
-                      return venue.concat(currentVenue.bookings);
-                    }, []),
+                    bookings: bookingsByProfile,
                   }}
                 />
               </div>
               <div className="flex-[1_1_26rem]">
                 <div className="flex flex-col gap-2">
-                  {venuesByProfile && venuesByProfile.length > 0 ? (
-                    venuesByProfile.map((venue) =>
-                      venue.bookings.map((booking) => (
-                        <BookingCard
-                          type="dark"
-                          key={booking.id}
-                          booking={booking}
-                          venueName={venue.name}
-                          venueImage={venue.media[0].url}
-                          ownBooking={false}
-                          rating={venue.rating}
-                        />
-                      ))
-                    )
-                  ) : (
-                    <p>No bookings on your venues yet.</p>
+                  {loading && (
+                    <div className="flex justify-center p-5">
+                      <GridLoader color="#2F4A52" />
+                    </div>
                   )}
+                  {!loading && venuesByProfile && venuesByProfile.length > 0
+                    ? venuesByProfile.map(
+                        (venue) =>
+                          venue.bookings &&
+                          venue.bookings.map((booking) => (
+                            <BookingCard
+                              type="dark"
+                              key={booking.id}
+                              booking={booking}
+                              venueName={venue.name}
+                              venueImage={venue.media[0].url}
+                              ownBooking={false}
+                              rating={venue.rating}
+                            />
+                          ))
+                      )
+                    : !loading && <p>No bookings on your venues yet.</p>}
                 </div>
               </div>
             </div>
