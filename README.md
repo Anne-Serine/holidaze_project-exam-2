@@ -1,6 +1,12 @@
 # Holidaze | venues
 (Venue Booking Web Application)
 
+---
+
+![Skjermbilde 2024-12-01 kl  21 39 59](https://github.com/user-attachments/assets/d0c3d31b-3e7c-4258-ba27-e71a6372b413)
+
+---
+
 Live site: <https://holidaze-a-s.netlify.app/>
 
 Holidaze is a modern venue booking platform for accommodations, designed for customers to book venues, and for venue managers to manage their venues and bookings. This project integrates with the Noroff API to deliver a seamless and dynamic user experience.
