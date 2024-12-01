@@ -17,12 +17,6 @@ function Footer() {
           <li className="pb-2">
             <Link to="/venue/manage">NEW VENUE</Link>
           </li>
-          <li className="pb-2">
-            <Link to="/about">ABOUT</Link>
-          </li>
-          <li className="pb-2">
-            <Link to="/contact">CONTACT</Link>
-          </li>
         </ul>
         <hr className="mt-8 w-full" />
         <div className="flex gap-3">

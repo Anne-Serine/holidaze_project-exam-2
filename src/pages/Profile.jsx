@@ -1,4 +1,4 @@
-import { Camera, Pen, Trash } from "lucide-react";
+import { Camera, Gem, Pen, Trash } from "lucide-react";
 import BookingCard from "../components/features/BookingCard";
 import Calendar from "../components/features/Calendar";
 import useVenues, { useAuthStore } from "../hooks/Store";
@@ -92,8 +92,13 @@ function Profile() {
               />
             </div>
           </div>
-          <div className="max-h-[200px] sm:ml-[14rem] pt-8 sm:pt-28 text-daze-white flex flex-col w-full justify-end text-center sm:text-start max-w-[18rem] sm:max-w-full">
-            <h1 className="text-2xl sm:text-4xl py-3 sm:py-0 pb-1 sm:p-0">
+          <div className="max-h-[240px] sm:ml-[14rem] pt-8 sm:pt-28 text-daze-white flex flex-col w-full justify-end text-center sm:text-start max-w-[18rem] sm:max-w-full">
+            <h1 className="relative text-2xl sm:text-4xl py-3 sm:py-0 pb-1 sm:p-0 flex flex-col items-center sm:block">
+              <span className="sm:absolute -top-[50px]">
+                {user.venueManager && (
+                  <Gem color="#353535" fill="#648E94" size={40} />
+                )}
+              </span>
               {user.name}
             </h1>
             <div className="flex justify-center sm:justify-start items-center text-sm sm:text-base">
