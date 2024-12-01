@@ -9,8 +9,8 @@ function Login() {
   useEffect(() => {
     if (token) {
       window.location.href = "/";
-    } 
-  }, [token])
+    }
+  }, [token]);
 
   return (
     <div className="flex">
@@ -23,7 +23,7 @@ function Login() {
       </div>
       <div className="h-[100vh] md:w-[50vw] absolute w-full right-0 bg-daze-bg flex justify-center">
         <div className="flex flex-col items-center gap-5 max-w-[15rem]">
-        <img
+          <img
             src="/assets/logo.svg"
             alt="Holidaze logo"
             className="my-10 md:my-32"
@@ -31,9 +31,7 @@ function Login() {
           <h1 className="text-3xl">Login</h1>
           <LoginForm />
           <div className="text-center p-2">
-            <p>
-              New user?
-            </p>
+            <p>New user?</p>
             <Link to="/register" className="text-daze-accent underline italic">
               Register here
             </Link>

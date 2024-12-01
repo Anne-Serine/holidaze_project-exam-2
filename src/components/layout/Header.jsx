@@ -30,7 +30,6 @@ function Header() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-
   return (
     <header className="relative bg-daze-bg text-daze-text py-3 flex flex-col gap-4">
       <div className="container flex flex-wrap justify-between items-center">
@@ -39,10 +38,19 @@ function Header() {
         </Link>
         <div className="flex gap-5 w-full sm:max-w-max justify-end">
           <div className="flex flex-col items-center">
-            <Button text={token ? "Logout" : "Login"} type="tertiary" onClick={logoutUser} icon={<UserRound size={22} />} />
+            <Button
+              text={token ? "Logout" : "Login"}
+              type="tertiary"
+              onClick={logoutUser}
+              icon={<UserRound size={22} />}
+            />
           </div>
           <div className="flex order-1 w-auto md:hidden">
-            <Button type="tertiary" onClick={() => setIsOpen(!isOpen)} icon={<Menu size={22} />} />
+            <Button
+              type="tertiary"
+              onClick={() => setIsOpen(!isOpen)}
+              icon={<Menu size={22} />}
+            />
           </div>
         </div>
       </div>

@@ -56,24 +56,26 @@ function Home() {
           </div>
         )}
         {venues && venues.length === 0 ? (
-          <div className="flex justify-center p-5"><GridLoader color="#2F4A52" /></div>
+          <div className="flex justify-center p-5">
+            <GridLoader color="#2F4A52" />
+          </div>
         ) : (
-        <div className="cards-grid">
-          {venues && venues.length > 0 &&
-            venues.map((venue) => (
-              <VenueCard
-                key={venue.id}
-                id={venue.id}
-                image={venue.media}
-                name={venue.name}
-                price={venue.price}
-                rating={venue.rating}
-                meta={venue.meta}
-              />
-            ))}
-        </div>
-        )
-        }
+          <div className="cards-grid">
+            {venues &&
+              venues.length > 0 &&
+              venues.map((venue) => (
+                <VenueCard
+                  key={venue.id}
+                  id={venue.id}
+                  image={venue.media}
+                  name={venue.name}
+                  price={venue.price}
+                  rating={venue.rating}
+                  meta={venue.meta}
+                />
+              ))}
+          </div>
+        )}
         <div className="flex mx-auto max-w-max gap-8 mt-10 mb-5">
           {/* --- Pagination button --- */}
           <Button text="< Prev" onClick={previousPage} />

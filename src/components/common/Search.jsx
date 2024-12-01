@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { CircleX, MapPin, SearchIcon } from "lucide-react";
 
 function Search() {
-  const allSearchedVenues = useVenues((state) => state.allVenues);
+  const allSearchedVenues = useVenues((state) => state.allSearchedVenues);
   const searchVenues = useVenues((state) => state.searchVenues);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -56,7 +56,10 @@ function Search() {
         </div>
       </div>
       {error && (
-        <div role="alert" className="bg-red-200 p-2 border text-daze-red border-daze-red">
+        <div
+          role="alert"
+          className="bg-red-200 p-2 border text-daze-red border-daze-red"
+        >
           {error}
         </div>
       )}

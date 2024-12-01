@@ -5,7 +5,6 @@ function Nav({ isOpen, closeMenu }) {
   const token = useAuthStore((state) => state.token);
   const venueManager = useAuthStore((state) => state.user.venueManager);
 
-
   return (
     <nav
       className={`absolute md:relative bg-daze-bg top-[100%] w-full pb-2 z-10  ${
@@ -26,7 +25,7 @@ function Nav({ isOpen, closeMenu }) {
             EXPLORE
           </NavLink>
         </li>
-        {token && 
+        {token && (
           <li className="pb-3 md:py-0 bg-daze-bg">
             <NavLink
               to="/profile"
@@ -40,8 +39,8 @@ function Nav({ isOpen, closeMenu }) {
               PROFILE
             </NavLink>
           </li>
-        }
-        {token && venueManager &&
+        )}
+        {token && venueManager && (
           <li className="pb-3 md:py-0 bg-daze-bg">
             <NavLink
               to="/venue/manage/"
@@ -55,7 +54,7 @@ function Nav({ isOpen, closeMenu }) {
               NEW VENUE
             </NavLink>
           </li>
-        }
+        )}
       </ul>
     </nav>
   );

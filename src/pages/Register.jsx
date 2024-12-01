@@ -9,8 +9,8 @@ function Register() {
   useEffect(() => {
     if (token) {
       window.location.href = "/";
-    } 
-  }, [token])
+    }
+  }, [token]);
 
   return (
     <div className="flex">

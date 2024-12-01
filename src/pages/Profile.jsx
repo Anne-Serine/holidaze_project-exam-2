@@ -32,8 +32,6 @@ function Profile() {
   const [successMessage, setSuccessMessage] = useState("");
   const loading = useProfile((state) => state.loading);
 
-  console.log("venues by profile:", venuesByProfile)
-
   useEffect(() => {
     getBookingsByProfile();
     getVenuesByProfile();
@@ -338,19 +336,21 @@ function Profile() {
                     </div>
                   )}
                   {!loading && venuesByProfile && venuesByProfile.length > 0
-                    ? venuesByProfile.map((venue) => (
-                      venue.bookings && venue.bookings.map((booking) => (
-                        <BookingCard
-                          type="dark"
-                          key={booking.id}
-                          booking={booking}
-                          venueName={venue.name}
-                          venueImage={venue.media[0].url}
-                          ownBooking={false}
-                          rating={venue.rating}
-                        />
-                      )) 
-                      ))
+                    ? venuesByProfile.map(
+                        (venue) =>
+                          venue.bookings &&
+                          venue.bookings.map((booking) => (
+                            <BookingCard
+                              type="dark"
+                              key={booking.id}
+                              booking={booking}
+                              venueName={venue.name}
+                              venueImage={venue.media[0].url}
+                              ownBooking={false}
+                              rating={venue.rating}
+                            />
+                          ))
+                      )
                     : !loading && <p>No bookings on your venues yet.</p>}
                 </div>
               </div>

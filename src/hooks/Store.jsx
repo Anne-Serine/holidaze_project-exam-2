@@ -34,7 +34,6 @@ export const useAuthStore = create(
             window.location.href = "/login";
           }
         } catch (error) {
-          console.log("Error fetching venues", error);
           set(() => ({
             error: error.message,
           }));
@@ -92,7 +91,6 @@ export const useAuthStore = create(
               : (window.location.href = "/");
           }
         } catch (error) {
-          console.log("Error fetching venues", error);
           set(() => ({
             error: error.message,
           }));
@@ -146,12 +144,11 @@ const useVenues = create((set, get) => ({
             error: "Could not find venues: " + response.errors[0].message,
           }));
         }
-          set(() => ({
-            allVenues: response.data,
-          }));
+        set(() => ({
+          allVenues: response.data,
+        }));
       }
     } catch (error) {
-      console.log("Error fetching venues", error);
       set(() => ({
         error: error.message,
       }));
@@ -212,7 +209,6 @@ const useVenues = create((set, get) => ({
           error: response.errors[0].message,
         }));
       }
-      console.log(response);
       if (response.data) {
         set(() => ({
           error: null,
@@ -220,7 +216,6 @@ const useVenues = create((set, get) => ({
         window.location.href = `/venue/${response.data.id}`;
       }
     } catch (error) {
-      console.log("Error creating a venue", error);
       set(() => ({
         error: error.message,
       }));
@@ -244,7 +239,8 @@ const useVenues = create((set, get) => ({
           error: null,
         }));
         // Update the state to remove the deleted booking
-        useProfile.getState().getVenuesAndBookingsByProfile();
+        useProfile.getState().getBookingsByProfile();
+        useProfile.getState().getVenuesByProfile();
         useVenues.getState().getAllVenues();
       } else {
         set(() => ({
@@ -252,7 +248,6 @@ const useVenues = create((set, get) => ({
         }));
       }
     } catch (error) {
-      console.log("Error deleting the venue", error);
       set(() => ({
         error: error.message,
       }));
@@ -262,9 +257,10 @@ const useVenues = create((set, get) => ({
     try {
       const response = await fetch(
         `${import.meta.env.VITE_BASE_URL}holidaze/venues/search?q=${query}`
-      );
-      const data = await response.json();
-      set(() => ({ allSearchedVenues: data }));
+      ).then((result) => result.json());
+      if (response.data) {
+        set(() => ({ allSearchedVenues: response.data }));
+      }
     } catch (error) {
       console.error("Error fetching search results:", error);
       set(() => ({ error: error.message }));
@@ -301,7 +297,6 @@ export const useBookings = create((set) => ({
         return response.data;
       }
     } catch (error) {
-      console.log("Error creating a booking", error);
       set(() => ({
         error: error.message,
       }));

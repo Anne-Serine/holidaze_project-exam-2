@@ -31,7 +31,6 @@ function SingleVenue() {
   useEffect(() => {
     async function fetchSingleVenue() {
       const data = await getAllVenues(id);
-      console.log(data);
       setVenueData(data);
     }
     {
@@ -105,15 +104,20 @@ function SingleVenue() {
         confirmDelete={confirmDelete}
         successMessage={successMessage}
       />
-      {error && 
+      {error && (
         <div className="container ">
-          <div role="alert" className="p-2 border border-daze-red bg-red-200 max-w-max text-daze-red">
+          <div
+            role="alert"
+            className="p-2 border border-daze-red bg-red-200 max-w-max text-daze-red"
+          >
             {error}
           </div>
         </div>
-      }
+      )}
       {!venueData ? (
-        <div className="flex justify-center p-5"><GridLoader color="#2F4A52" /></div>
+        <div className="flex justify-center p-5">
+          <GridLoader color="#2F4A52" />
+        </div>
       ) : (
         <>
           <section className="container">
