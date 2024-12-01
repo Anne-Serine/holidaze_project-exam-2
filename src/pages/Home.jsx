@@ -3,6 +3,7 @@ import Button from "../components/common/Buttons";
 import Search from "../components/common/Search";
 import useVenues from "../hooks/Store";
 import { useEffect } from "react";
+import { GridLoader } from "react-spinners";
 
 function Home() {
   const venues = useVenues((state) => state.allVenues);
@@ -54,9 +55,11 @@ function Home() {
             </div>
           </div>
         )}
-        {/* List of venues */}
+        {venues && venues.length === 0 ? (
+          <div className="flex justify-center p-5"><GridLoader color="#2F4A52" /></div>
+        ) : (
         <div className="cards-grid">
-          {venues.length > 0 &&
+          {venues && venues.length > 0 &&
             venues.map((venue) => (
               <VenueCard
                 key={venue.id}
@@ -69,6 +72,8 @@ function Home() {
               />
             ))}
         </div>
+        )
+        }
         <div className="flex mx-auto max-w-max gap-8 mt-10 mb-5">
           {/* --- Pagination button --- */}
           <Button text="< Prev" onClick={previousPage} />

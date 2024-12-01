@@ -133,9 +133,14 @@ const useVenues = create((set, get) => ({
           return response.data;
         }
       } else {
-        set(() => ({
-          allVenues: response.data,
-        }));
+        if (response.errors) {
+          set(() => ({
+            error: "Could not find venues: " + response.errors[0].message,
+          }));
+        }
+          set(() => ({
+            allVenues: response.data,
+          }));
       }
     } catch (error) {
       console.log("Error fetching venues", error);

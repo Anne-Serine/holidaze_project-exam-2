@@ -14,6 +14,7 @@ import { useEffect, useRef, useState } from "react";
 import useVenues, { useAuthStore } from "../hooks/Store";
 import Button from "../components/common/Buttons";
 import Modal from "../components/common/Modal";
+import { GridLoader } from "react-spinners";
 
 function SingleVenue() {
   const [venueData, setVenueData] = useState(null);
@@ -111,7 +112,9 @@ function SingleVenue() {
           </div>
         </div>
       }
-      {venueData && (
+      {!venueData ? (
+        <div className="flex justify-center p-5"><GridLoader color="#2F4A52" /></div>
+      ) : (
         <>
           <section className="container">
             {/* Image carousel */}

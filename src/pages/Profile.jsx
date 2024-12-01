@@ -8,10 +8,13 @@ import { useProfile } from "../hooks/useProfile";
 import { Link } from "react-router-dom";
 import VenueCard from "../components/features/VenueCard";
 import Modal from "../components/common/Modal";
+import { GridLoader } from "react-spinners";
 
 function Profile() {
   const user = useAuthStore((state) => state.user);
-  const getVenuesAndBookingsByProfile = useProfile((state) => state.getVenuesAndBookingsByProfile);
+  const getVenuesAndBookingsByProfile = useProfile(
+    (state) => state.getVenuesAndBookingsByProfile
+  );
   const bookingsByProfile = useProfile((state) => state.bookingsByProfile);
   const updateProfile = useProfile((state) => state.updateProfile);
   const venuesByProfile = useProfile((state) => state.venuesByProfile);
@@ -26,6 +29,7 @@ function Profile() {
   const [venueNameToDelete, setVenueNameToDelete] = useState("");
   const deleteBooking = useProfile((state) => state.deleteBooking);
   const [successMessage, setSuccessMessage] = useState("");
+  const loading = useProfile((state) => state.loading);
 
   useEffect(() => {
     getVenuesAndBookingsByProfile();
@@ -234,22 +238,25 @@ function Profile() {
             </div>
           )}
           <div className="flex flex-col gap-2">
-            {bookingsByProfile && bookingsByProfile.length > 0 ? (
-              bookingsByProfile.map((booking) => (
-                <BookingCard
-                  key={booking.id}
-                  booking={booking}
-                  venueName={booking.venue.name}
-                  venueImage={booking.venue.media[0].url}
-                  rating={booking.venue.rating}
-                  openModal={(id, venueName, type) =>
-                    openModal(id, venueName, type)
-                  }
-                />
-              ))
-            ) : (
-              <p>No bookings yet.</p>
+            {loading && (
+              <div className="flex justify-center p-5">
+                <GridLoader color="#2F4A52" />
+              </div>
             )}
+            {!loading && bookingsByProfile && bookingsByProfile.length > 0
+              ? bookingsByProfile.map((booking) => (
+                  <BookingCard
+                    key={booking.id}
+                    booking={booking}
+                    venueName={booking.venue.name}
+                    venueImage={booking.venue.media[0].url}
+                    rating={booking.venue.rating}
+                    openModal={(id, venueName, type) =>
+                      openModal(id, venueName, type)
+                    }
+                  />
+                ))
+              : !loading && <p>No bookings yet.</p>}
           </div>
         </div>
         <div></div>
@@ -268,36 +275,39 @@ function Profile() {
             </div>
           </div>
           <div className="container cards-grid">
-            {venuesByProfile && venuesByProfile.length > 0 ? (
-              venuesByProfile.map((venue) => (
-                <div key={venue.id} className="mb-3">
-                  <VenueCard
-                    id={venue.id}
-                    image={venue.media}
-                    name={venue.name}
-                    price={venue.price}
-                    rating={venue.rating}
-                    meta={venue.meta}
-                  />
-                  <div className="flex justify mt-2 gap-8">
-                    <Button
-                      text="Edit"
-                      type="tertiary"
-                      url={`/venue/manage/${venue.id}`}
-                      icon={<Pen size={20} />}
-                    />
-                    <Button
-                      text="Delete"
-                      type="tertiary"
-                      onClick={() => openModal(venue.id, venue.name, "venue")}
-                      icon={<Trash color="#8B0404" size={20} />}
-                    />
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p>No venues yet.</p>
+            {loading && (
+              <div className="flex justify-center p-5">
+                <GridLoader color="#2F4A52" />
+              </div>
             )}
+            {!loading && venuesByProfile && venuesByProfile.length > 0
+              ? venuesByProfile.map((venue) => (
+                  <div key={venue.id} className="mb-3">
+                    <VenueCard
+                      id={venue.id}
+                      image={venue.media}
+                      name={venue.name}
+                      price={venue.price}
+                      rating={venue.rating}
+                      meta={venue.meta}
+                    />
+                    <div className="flex justify mt-2 gap-8">
+                      <Button
+                        text="Edit"
+                        type="tertiary"
+                        url={`/venue/manage/${venue.id}`}
+                        icon={<Pen size={20} />}
+                      />
+                      <Button
+                        text="Delete"
+                        type="tertiary"
+                        onClick={() => openModal(venue.id, venue.name, "venue")}
+                        icon={<Trash color="#8B0404" size={20} />}
+                      />
+                    </div>
+                  </div>
+                ))
+              : !loading && <p>No venues yet.</p>}
           </div>
           <Modal
             dialogRef={dialogRef}
@@ -318,9 +328,13 @@ function Profile() {
               </div>
               <div className="flex-[1_1_26rem]">
                 <div className="flex flex-col gap-2">
-                  {bookingsByProfile && bookingsByProfile.length > 0 ? (
-                    bookingsByProfile.map((booking) =>
-                      
+                  {loading && (
+                    <div className="flex justify-center p-5">
+                      <GridLoader color="#2F4A52" />
+                    </div>
+                  )}
+                  {!loading && bookingsByProfile && bookingsByProfile.length > 0
+                    ? bookingsByProfile.map((booking) => (
                         <BookingCard
                           type="dark"
                           key={booking.id}
@@ -330,11 +344,8 @@ function Profile() {
                           ownBooking={false}
                           rating={booking.venue.rating}
                         />
-                      
-                    )
-                  ) : (
-                    <p>No bookings on your venues yet.</p>
-                  )}
+                      ))
+                    : !loading && <p>No bookings on your venues yet.</p>}
                 </div>
               </div>
             </div>

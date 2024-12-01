@@ -6,6 +6,7 @@ export const useProfile = create((set, get) => ({
   bookingsByProfile: [],
   venuesByProfile: [],
   error: null,
+  loading: false,
   
   updateProfile: async (userData) => {
     try {
@@ -43,6 +44,7 @@ export const useProfile = create((set, get) => ({
     }
   },
   getVenuesAndBookingsByProfile: async () => {
+    set({ loading: true });
     try {
       const response = await fetch(
         `${import.meta.env.VITE_BASE_URL}holidaze/profiles/${
@@ -58,6 +60,7 @@ export const useProfile = create((set, get) => ({
       console.log(response)
       if (response.data) {
         set(() => ({
+          loading: false,
           bookingsByProfile: response.data.bookings.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)),
           venuesByProfile: response.data.venues.sort((a, b) => new Date(b.created) - new Date(a.created)),
         }));
@@ -65,6 +68,7 @@ export const useProfile = create((set, get) => ({
     } catch (error) {
       console.log("Error fetching venues", error);
       set(() => ({
+        loading: false,
         error: error.message,
       }));
     }
