@@ -1,20 +1,20 @@
 import { create } from "zustand";
 import { useAuthStore } from "./Store";
 
-const name = useAuthStore.getState().user.name;
-const token = useAuthStore.getState().token;
 
-export const useProfile = create((set) => ({
+export const useProfile = create((set, get) => ({
+  bookingsByProfile: [],
+  venuesByProfile: [],
   error: null,
   
   updateProfile: async (userData) => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BASE_URL}holidaze/profiles/${name}`,
+        `${import.meta.env.VITE_BASE_URL}holidaze/profiles/${useAuthStore.getState().user.name}`,
         {
           method: "PUT",
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${useAuthStore.getState().token}`,
             "X-Noroff-API-Key": import.meta.env.VITE_API_KEY,
             "Content-Type": "application/json",
           },
@@ -37,6 +37,65 @@ export const useProfile = create((set) => ({
       }
     } catch (error) {
       console.log("Error updating profile", error);
+      set(() => ({
+        error: error.message,
+      }));
+    }
+  },
+  getVenuesAndBookingsByProfile: async () => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}holidaze/profiles/${
+          useAuthStore.getState().user.name
+        }?_bookings=true&_venues=true`, {
+          headers: {
+            Authorization: `Bearer ${useAuthStore.getState().token}`,
+            "X-Noroff-API-Key": import.meta.env.VITE_API_KEY,
+            "Content-Type": "application/json",
+          },
+        }
+      ).then((result) => result.json());
+      console.log(response)
+      if (response.data) {
+        set(() => ({
+          bookingsByProfile: response.data.bookings.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)),
+          venuesByProfile: response.data.venues.sort((a, b) => new Date(b.created) - new Date(a.created)),
+        }));
+      }
+    } catch (error) {
+      console.log("Error fetching venues", error);
+      set(() => ({
+        error: error.message,
+      }));
+    }
+  },
+  deleteBooking: async (id) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}holidaze/bookings/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${useAuthStore.getState().token}`,
+            "X-Noroff-API-Key": import.meta.env.VITE_API_KEY,
+          },
+        }
+      );
+
+      if (response.ok) {
+        // Update the state to remove the deleted booking
+        const getVenuesAndBookings = get().getVenuesAndBookingsByProfile;
+        await getVenuesAndBookings();
+        set((state) => ({
+          bookingsByProfile: state.bookingsByProfile.filter(
+            (booking) => booking.id !== id
+          ),
+        }));
+      } else {
+        console.error("Failed to delete the booking");
+      }
+    } catch (error) {
+      console.log("Error deleting the booking", error);
       set(() => ({
         error: error.message,
       }));

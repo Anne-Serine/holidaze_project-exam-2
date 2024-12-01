@@ -1,7 +1,7 @@
 import { Camera, Pen, Trash } from "lucide-react";
 import BookingCard from "../components/features/BookingCard";
 import Calendar from "../components/features/Calendar";
-import useVenues, { useAuthStore, useBookings } from "../hooks/Store";
+import useVenues, { useAuthStore } from "../hooks/Store";
 import { useEffect, useRef, useState } from "react";
 import Button from "../components/common/Buttons";
 import { useProfile } from "../hooks/useProfile";
@@ -11,10 +11,10 @@ import Modal from "../components/common/Modal";
 
 function Profile() {
   const user = useAuthStore((state) => state.user);
-  const getAllVenues = useVenues((state) => state.getAllVenues);
-  const bookingsByProfile = useVenues((state) => state.bookingsByProfile);
+  const getVenuesAndBookingsByProfile = useProfile((state) => state.getVenuesAndBookingsByProfile);
+  const bookingsByProfile = useProfile((state) => state.bookingsByProfile);
   const updateProfile = useProfile((state) => state.updateProfile);
-  const venuesByProfile = useVenues((state) => state.venuesByProfile);
+  const venuesByProfile = useProfile((state) => state.venuesByProfile);
   const [showBio, setShowBio] = useState(false);
   const [bio, setBio] = useState(user.bio);
   const [showAvatar, setShowAvatar] = useState(false);
@@ -24,12 +24,12 @@ function Profile() {
   const deleteVenue = useVenues((state) => state.deleteVenue);
   const [venueToDelete, setVenueToDelete] = useState(null);
   const [venueNameToDelete, setVenueNameToDelete] = useState("");
-  const deleteBooking = useBookings((state) => state.deleteBooking);
+  const deleteBooking = useProfile((state) => state.deleteBooking);
   const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
-    getAllVenues();
-  }, [getAllVenues]);
+    getVenuesAndBookingsByProfile();
+  }, [getVenuesAndBookingsByProfile]);
 
   const dialogRef = useRef(null);
 
@@ -239,9 +239,9 @@ function Profile() {
                 <BookingCard
                   key={booking.id}
                   booking={booking}
-                  venueName={booking.venueName}
-                  venueImage={booking.venueUrl}
-                  rating={booking.rating}
+                  venueName={booking.venue.name}
+                  venueImage={booking.venue.media[0].url}
+                  rating={booking.venue.rating}
                   openModal={(id, venueName, type) =>
                     openModal(id, venueName, type)
                   }
@@ -312,27 +312,25 @@ function Profile() {
               <div className="h-fit">
                 <Calendar
                   venueData={{
-                    bookings: venuesByProfile.reduce((venue, currentVenue) => {
-                      return venue.concat(currentVenue.bookings);
-                    }, []),
+                    bookings: bookingsByProfile,
                   }}
                 />
               </div>
               <div className="flex-[1_1_26rem]">
                 <div className="flex flex-col gap-2">
-                  {venuesByProfile && venuesByProfile.length > 0 ? (
-                    venuesByProfile.map((venue) =>
-                      venue.bookings.map((booking) => (
+                  {bookingsByProfile && bookingsByProfile.length > 0 ? (
+                    bookingsByProfile.map((booking) =>
+                      
                         <BookingCard
                           type="dark"
                           key={booking.id}
                           booking={booking}
-                          venueName={venue.name}
-                          venueImage={venue.media[0].url}
+                          venueName={booking.venue.name}
+                          venueImage={booking.venue.media[0].url}
                           ownBooking={false}
-                          rating={venue.rating}
+                          rating={booking.venue.rating}
                         />
-                      ))
+                      
                     )
                   ) : (
                     <p>No bookings on your venues yet.</p>
